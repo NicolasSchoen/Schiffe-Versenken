@@ -362,7 +362,11 @@ public class Feld {
 				this.feldAendern(x, y, 2);
 				//pruefen ob schiff versenkt, dann return 3
 				if(schiffVersenkt(x,y))
+				{
+					schiffVersenken(x, y);
 					return 3;
+				}
+					
 				return 2;
 		}
 		return -1;
@@ -370,39 +374,55 @@ public class Feld {
 	
 	private boolean schiffVersenkt(int x, int y)
 	{
-		/*for(int i=0; i<5; i++)//laufe nach rechts			//noch pruefen
+		for(int i=1; i<5; i++)//laufe nach rechts			//noch pruefen
 		{
-			if(getFeldInhalt(x+i, y) == 0)	//wasser
+			if(x+i >= getGroesse() || getFeldInhalt(x+i, y) == 0)	//wasser
 			{
-				if(i==1)
-					break;
+				break;
 			}
+			if(x+i < getGroesse() && getFeldInhalt(x+i, y) == 1)
+				return false;
 		}
-		for(int i=0; i<5; i++)//laufe nach links
+		for(int i=1; i<5; i++)//laufe nach links
 		{
-			if(getFeldInhalt(x-i, y) == 0)	//wasser
+			if(x-i < 0 || getFeldInhalt(x-i, y) == 0)	//wasser
 			{
-				if(i==1)
-					break;
+				break;
 			}
+			if(x-i >= 0 && getFeldInhalt(x-i, y) == 1)
+				return false;
 		}
-		for(int i=0; i<5; i++)//laufe nach oben
+		for(int i=1; i<5; i++)//laufe nach oben
 		{
-			if(getFeldInhalt(x, y-i) == 0)	//wasser
+			if(y-i < 0 || getFeldInhalt(x, y-i) == 0)	//wasser
 			{
-				if(i==1)
-					break;
+				break;
 			}
+			if(y-i >= 0 && getFeldInhalt(x, y-i) == 1)
+				return false;
 		}
-		for(int i=0; i<5; i++)//laufe nach unten
+		for(int i=1; i<5; i++)//laufe nach unten
 		{
-			if(getFeldInhalt(x, y+i) == 0)	//wasser
+			if(y+i >= getGroesse() || getFeldInhalt(x, y+i) == 0)	//wasser
 			{
-				if(i==1)
-					break;
+				break;
 			}
-		}*/
-		return false;
+			if(y+i < getGroesse() && getFeldInhalt(x, y+i) == 1)
+				return false;
+		}
+		return true;
+	}
+	public void schiffVersenken(int x, int y)						//Setzt getroffene felder rekursiv auf versenkt
+	{
+		feldAendern(x, y, 3);
+		if(y-1 >= 0 && getFeldInhalt(x, y-1) == 2)
+			schiffVersenken(x,y-1);
+		if(x+1 < getGroesse() && getFeldInhalt(x+1, y) == 2)
+			schiffVersenken(x+1, y);
+		if(y+1 < getGroesse() && getFeldInhalt(x, y+1) == 2)
+			schiffVersenken(x, y+1);
+		if(x-1 >= 0 && getFeldInhalt(x-1, y) == 2)
+			schiffVersenken(x-1, y);
 	}
 	public boolean bereitsBeschossen(int x, int y)						//prueft ob position schon beschossen wurde
 	{

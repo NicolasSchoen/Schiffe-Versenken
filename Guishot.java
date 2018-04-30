@@ -74,15 +74,19 @@ public class Guishot extends JFrame {
 				    		schiesse = false;
 				    		//c.getDefaultCursor();
 				    		btnSchiessen.setBackground(Color.white);
+				    		btnSchiessen.setEnabled(true);
 				    		
 				    		if(gegnerwert == 2 || gegnerwert == 3)
 				    		{
 				    			gegnerischepunkte-=1;
+				    			if(gegnerwert == 3)
+				    				gegner.schiffVersenken(posx, posy);
 				    			//System.out.println("gegnerische Punkte:" + gegnerischepunkte);
 				    			lblGegnerpunkte.setText("Gegnerpunkte: " + gegnerischepunkte);
 				    			if(gegnerischepunkte <=0)
 				    			{
 				    				//spieler hat gewonnen
+				    				JOptionPane.showMessageDialog(null, "Gewonnen!");
 				    			}
 				    		}
 				    		
@@ -150,6 +154,7 @@ public class Guishot extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {		//schiessen button
 				schiesse = true;
 				btnSchiessen.setBackground(Color.orange);
+				btnSchiessen.setEnabled(false);
 				//c = getToolkit().createCustomCursor(new ImageIcon("img.png").getImage(), new Point(10,10), "Cursor");
 				//c.getSystemCustomCursor();
 			}
