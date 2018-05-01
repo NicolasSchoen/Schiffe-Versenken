@@ -71,10 +71,7 @@ public class Guishot extends JFrame {
 				    		System.out.println("X:" + posx + ",Y:" + posy);
 				    		int gegnerwert = spieler2.schiessen(posx, posy);
 				    		gegner.feldAendern(posx, posy, gegnerwert);
-				    		schiesse = false;
-				    		//c.getDefaultCursor();
-				    		btnSchiessen.setBackground(Color.white);
-				    		btnSchiessen.setEnabled(true);
+				    		
 				    		
 				    		if(gegnerwert == 2 || gegnerwert == 3)
 				    		{
@@ -88,6 +85,13 @@ public class Guishot extends JFrame {
 				    				//spieler hat gewonnen
 				    				JOptionPane.showMessageDialog(null, "Gewonnen!");
 				    			}
+				    		}
+				    		else
+				    		{
+				    			schiesse = false;
+				    			//c.getDefaultCursor();
+				    			btnSchiessen.setBackground(Color.white);
+				    			btnSchiessen.setEnabled(true);
 				    		}
 				    		
 				    		repaint();
