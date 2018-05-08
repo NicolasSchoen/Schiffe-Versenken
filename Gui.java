@@ -1,4 +1,6 @@
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.BorderLayout;
 import javax.swing.JToggleButton;
 import javax.swing.JInternalFrame;
@@ -35,6 +37,20 @@ public class Gui extends javax.swing.JFrame{
 		getContentPane().add(btnNeuesSpiel);
 		
 		JButton btnSpielLaden = new JButton("Spiel laden");
+		btnSpielLaden.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {		//Spiel laden button
+				JFileChooser fc = new JFileChooser();
+				int rueckgabeWert = fc.showOpenDialog(null);
+		        
+		        /* Abfrage, ob auf "Öffnen" geklickt wurde */
+		        if(rueckgabeWert == JFileChooser.APPROVE_OPTION)
+		        {
+		             // Ausgabe der ausgewaehlten Datei
+		            System.out.println("Die zu öffnende Datei ist: " +
+		                  fc.getSelectedFile().getName());
+		        }
+			}
+		});
 		btnSpielLaden.setBounds(116, 122, 188, 59);
 		getContentPane().add(btnSpielLaden);
 		

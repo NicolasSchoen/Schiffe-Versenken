@@ -10,12 +10,14 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.awt.event.ActionEvent;
 
 public class Guishot extends JFrame {
@@ -133,7 +135,7 @@ public class Guishot extends JFrame {
 		
 		JButton btnBeenden = new JButton("Beenden");
 		btnBeenden.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {		//beenden button
 				System.exit(0);
 			}
 		});
@@ -141,6 +143,16 @@ public class Guishot extends JFrame {
 		getContentPane().add(btnBeenden);
 		
 		JButton btnSpeichernBeenden = new JButton("Speichern  und beenden");
+		btnSpeichernBeenden.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {		//speichern und beenden button
+				////speichern
+				JFileChooser fc = new JFileChooser();
+				fc.showSaveDialog(null);
+				
+				////
+				System.exit(0);
+			}
+		});
 		btnSpeichernBeenden.setBounds(109, 11, 171, 23);
 		getContentPane().add(btnSpeichernBeenden);
 		
