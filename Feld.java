@@ -431,4 +431,8 @@ public class Feld {
 				return true;
 		return false;
 	}
+	public int getFeldpunkte()
+	{
+		return belegteSchiffsfelder;
+	}
 }

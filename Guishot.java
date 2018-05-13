@@ -166,8 +166,13 @@ public class Guishot extends JFrame {
 		this.spieler = f;
 		fgroesse = spieler.getGroesse();
 		//noch zum test
-		//spieler2 = new Feld(fgroesse);
-		spieler2 = spieler;
+		//spieler2 = new Feld(fgroesse);	//Feld des Gegners(KI) KI rudimentär implementiert, noch testen!
+		spieler2 = new Feld(fgroesse);
+		if(Ki.alleSchiffeSetzen(spieler2))
+			System.out.println("Ki hat alle Schiffe gesetzt!");
+		else
+			System.out.println("Zu viele Fehler!");
+		//spieler2 = spieler;
 		//spieler2.schiffPlatzieren(2, 4, 4, 1);
 		//
 		eigenePunkte = gegnerischepunkte = (int) (fgroesse * fgroesse * 0.3);

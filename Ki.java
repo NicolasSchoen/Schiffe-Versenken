@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class Ki {
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 
 		int[][] feld = new int[10][10];
 		for (int x = 0; x < 10; x++) {
@@ -21,9 +21,59 @@ public class Ki {
 			System.out.println();
 		}
 
+	}*/
+	
+	public static boolean alleSchiffeSetzen(Feld f)
+	{
+		int fpunkte = f.getFeldpunkte();
+		Random rand = new Random();
+		int schiffg = rand.nextInt(4) + 2;
+		int posx = rand.nextInt(f.getGroesse());
+		int posy = rand.nextInt(f.getGroesse());
+		int richtung = rand.nextInt(4);
+		int fehler = 0;
+		
+		while(fpunkte > 0)
+		{
+			/*for(int i=0; i<10; i++)
+			{
+				
+			}*/
+			schiffg = rand.nextInt(4) + 2;
+			posx = rand.nextInt(f.getGroesse());
+			posy = rand.nextInt(f.getGroesse());
+			richtung = rand.nextInt(4);
+			
+			if(fpunkte == 3)
+				schiffg = 3;
+			if(fpunkte == 2)
+				schiffg = 2;
+			if(fpunkte == 4)
+				schiffg = (rand.nextInt(2) + 1) * 2;
+			if(!f.schiffPlatzieren(posx, posy, schiffg, richtung))
+				fehler++;
+			else
+			{
+				fehler=0;
+				fpunkte-=schiffg;
+			}
+				
+			
+			if(fehler > 10000)			//soll verhindern, dass ki zu oft durchlaeuft
+			{
+				f.feldInitialisieren();
+				fpunkte = f.getFeldpunkte();
+				return false;
+			}
+			
+			
+		}
+		if(fpunkte == 0)
+			return true;
+		return false;
 	}
 
-	public static void schiffesetzen(int[][] feld, int schiffgroesse, int feldgroesse) {
+	/*public static void schiffesetzen(int[][] feld, int schiffgroesse, int feldgroesse) {
 		Random rand = new Random();
 		int random4 = rand.nextInt(feldgroesse);
 
@@ -198,9 +248,9 @@ public class Ki {
 		}
 		System.out.println(random3 + " " + random4);
 
-	}
+	}*/
 
-	public static void schiesen(int[][] feld, int g) {
+	/*public static void schiesen(int[][] feld, int g) {
 		Random rand = new Random();
 		int random1 = rand.nextInt(g);
 
@@ -218,6 +268,6 @@ public class Ki {
 			schiesen(feld, g);
 		}
 
-	}
+	}*/
 
 }
