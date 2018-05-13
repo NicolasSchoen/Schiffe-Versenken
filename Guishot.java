@@ -8,6 +8,14 @@ import java.awt.Point;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import sun.applet.Main;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -18,6 +26,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.awt.event.ActionEvent;
 
 public class Guishot extends JFrame {
@@ -79,7 +89,33 @@ public class Guishot extends JFrame {
 				    		{
 				    			gegnerischepunkte-=1;
 				    			if(gegnerwert == 3)
+				    			{
 				    				gegner.schiffVersenken(posx, posy);
+				    				
+				    				try {
+					    		        Clip clip = AudioSystem.getClip();
+					    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+					    		          Main.class.getResourceAsStream("/media/explosion.wav"));
+					    		        clip.open(inputStream);
+					    		        clip.start(); 
+					    		      } catch (Exception e) {
+					    		        System.err.println(e.getMessage());
+					    		      }
+				    			}
+				    			else
+				    			{
+				    				try {
+					    		        Clip clip = AudioSystem.getClip();
+					    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+					    		          Main.class.getResourceAsStream("/media/treffer.wav"));
+					    		        clip.open(inputStream);
+					    		        clip.start(); 
+					    		      } catch (Exception e) {
+					    		        System.err.println(e.getMessage());
+					    		      }
+				    			}
+				    				
+				    			repaint();
 				    			//System.out.println("gegnerische Punkte:" + gegnerischepunkte);
 				    			lblGegnerpunkte.setText("Gegnerpunkte: " + gegnerischepunkte);
 				    			if(gegnerischepunkte <=0)
@@ -94,9 +130,20 @@ public class Guishot extends JFrame {
 				    			//c.getDefaultCursor();
 				    			btnSchiessen.setBackground(Color.white);
 				    			btnSchiessen.setEnabled(true);
+				    			
+				    			try {
+				    		        Clip clip = AudioSystem.getClip();
+				    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+				    		          Main.class.getResourceAsStream("/media/wasser.wav"));
+				    		        clip.open(inputStream);
+				    		        clip.start(); 
+				    		      } catch (Exception e) {
+				    		        System.err.println(e.getMessage());
+				    		      }
+				    			repaint();
 				    		}
 				    		
-				    		repaint();
+				    		
 				    	}
 			    	
 			    	}
