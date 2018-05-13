@@ -59,7 +59,7 @@ public class Ki {
 			}
 				
 			
-			if(fehler > 10000)			//soll verhindern, dass ki zu oft durchlaeuft
+			if(fehler > 10000)			//soll verhindern, dass ki zu oft durchlaeuft(endlosschleife)
 			{
 				f.feldInitialisieren();
 				fpunkte = f.getFeldpunkte();
@@ -71,6 +71,30 @@ public class Ki {
 		if(fpunkte == 0)
 			return true;
 		return false;
+	}
+	
+	public static boolean schiesse(Feld s, Feld f2)
+	{
+		Random rand = new Random();
+		int posx = rand.nextInt(f2.getGroesse());
+		int posy = rand.nextInt(f2.getGroesse());
+		int punkte = f2.getFeldpunkte();
+		while(punkte > 0)
+		{
+			posx = rand.nextInt(f2.getGroesse());
+			posy = rand.nextInt(f2.getGroesse());
+			if(!f2.bereitsBeschossen(posx, posy))
+			{
+				int wert = s.schiessen(posx, posy);
+				f2.feldAendern(posx, posy, wert);
+				if(wert == 0)
+				{
+					return false;
+				}
+					
+			}
+		}
+		return true;
 	}
 
 	/*public static void schiffesetzen(int[][] feld, int schiffgroesse, int feldgroesse) {

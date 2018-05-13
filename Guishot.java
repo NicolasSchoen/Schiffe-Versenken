@@ -36,6 +36,7 @@ public class Guishot extends JFrame {
 	private Feld spieler;
 	private Feld spieler2;
 	private Feld gegner;
+	private Feld gegner2;
 	private int fgroesse;
 	private boolean schiesse = false;
 	JButton btnSchiessen;
@@ -128,6 +129,15 @@ public class Guishot extends JFrame {
 				    		{
 				    			schiesse = false;
 				    			//c.getDefaultCursor();
+				    			Ki.schiesse(spieler, gegner2);		//ki schiesst
+				    			eigenePunkte = spieler.getFeldpunkte();
+				    			lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
+				    			repaint();
+				    			if(eigenePunkte == 0)
+				    			{
+				    				//spieler hat verloren
+				    				JOptionPane.showMessageDialog(null, "Verloren!");
+				    			}
 				    			btnSchiessen.setBackground(Color.white);
 				    			btnSchiessen.setEnabled(true);
 				    			
@@ -140,7 +150,7 @@ public class Guishot extends JFrame {
 				    		      } catch (Exception e) {
 				    		        System.err.println(e.getMessage());
 				    		      }
-				    			repaint();
+				    			
 				    		}
 				    		
 				    		
@@ -178,6 +188,8 @@ public class Guishot extends JFrame {
 		eigenePunkte = gegnerischepunkte = (int) (fgroesse * fgroesse * 0.3);
 		gegner= new Feld(fgroesse);
 		gegner.gegnerInitialisieren();	//setze alle felder auf unbekannt
+		gegner2 = new Feld(fgroesse);
+		gegner2.gegnerInitialisieren();
 		
 		this.setTitle("Schiffe versenken schiessen");
 		this.setSize(1000, 620);

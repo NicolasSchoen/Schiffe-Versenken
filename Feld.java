@@ -335,7 +335,7 @@ public class Feld {
 			if(wert >= 0 && wert <= 4)									//pruefe ob wert gueltig
 			{
 				feld[x][y] = wert;
-				if(wert == 1)
+				if(wert == 2)
 					belegteSchiffsfelder--;
 				//System.out.println("Noch " + belegteSchiffsfelder + " Schiffspunkte verfuegbar");
 				return true;
