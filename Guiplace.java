@@ -44,6 +44,8 @@ public class Guiplace extends JFrame {
 	JLabel lblAuswahl;
 	private Feld spielfeld;
 	private boolean alleSchiffegesetzt=false;
+	private JButton btnWeiter;
+	private JButton btnZufaelligPlatzieren;
 
 	/**
 	 * Launch the application.
@@ -87,10 +89,11 @@ public class Guiplace extends JFrame {
 				    	if(schiffsPunkte == 0)
 				    	{
 				    		alleSchiffegesetzt = true;
+				    		btnWeiter.setEnabled(true);
 				    		JOptionPane.showMessageDialog(null, "Alle Schiffe gesetzt!");
-				    		dispose();
+				    		//dispose();
 							//Guiplace setship = new Guiplace(wert);
-							new Guishot(spielfeld);
+							//new Guishot(spielfeld);
 				    	}
 				    	
 				    }
@@ -258,11 +261,36 @@ public class Guiplace extends JFrame {
 				spielfeld.feldInitialisieren();
 				schiffsPunkte = (int) (groesse * groesse * 0.3);
 				lblVerfuegbareSchiffspunkte.setText("Verfuegbare Schiffspunkte: " + schiffsPunkte);
+				btnWeiter.setEnabled(false);
 				repaint();
 			}
 		});
 		btnSchiffeZuruecksetzen.setBounds(34, 467, 156, 25);
 		getContentPane().add(btnSchiffeZuruecksetzen);
+		
+		btnZufaelligPlatzieren = new JButton("zufaellig platzieren");
+		btnZufaelligPlatzieren.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				//Button zufaelligplatzieren
+				spielfeld.feldInitialisieren();
+				Ki.alleSchiffeSetzen(spielfeld);
+				lblVerfuegbareSchiffspunkte.setText("Verfuegbare Schiffspunkte: " + 0);
+				repaint();
+				btnWeiter.setEnabled(true);
+			}
+		});
+		btnZufaelligPlatzieren.setBounds(34, 505, 156, 25);
+		getContentPane().add(btnZufaelligPlatzieren);
+		
+		btnWeiter = new JButton("weiter");
+		btnWeiter.setEnabled(false);
+		btnWeiter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				//Button weiter
+				dispose();
+				new Guishot(spielfeld);
+			}
+		});
+		btnWeiter.setBounds(885, 535, 97, 25);
+		getContentPane().add(btnWeiter);
 		
 		
 		
