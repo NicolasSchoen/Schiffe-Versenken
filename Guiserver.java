@@ -16,6 +16,7 @@ public class Guiserver extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private int feldgroesse;
+	private int modus;
 
 	/**
 	 * Launch the application.
@@ -36,7 +37,7 @@ public class Guiserver extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Guiserver(int g) {
+	public Guiserver(int g, int m) {
 		/*setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -44,6 +45,7 @@ public class Guiserver extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);*/
 		this.feldgroesse = g;
+		this.modus = m;
 		
 		
 		this.setTitle("Schiffe versenken-Server konfigurieren");

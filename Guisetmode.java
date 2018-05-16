@@ -57,7 +57,7 @@ public class Guisetmode extends JFrame {
 				if(wert >= 5 && wert <= 30 )
 				{
 					dispose();
-					new Guiserver(wert);
+					new Guiserver(wert,1);
 					//setship.setVisible(true);
 				}
 				else
@@ -80,7 +80,7 @@ int wert = Integer.parseInt(textField.getText());
 				{
 					dispose();
 					//Guiplace setship = new Guiplace(wert);
-					new Guiplace(wert);
+					new Guiplace(wert,2);
 					//setship.setVisible(true);
 				}
 				else

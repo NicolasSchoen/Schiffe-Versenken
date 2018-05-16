@@ -46,6 +46,7 @@ public class Guiplace extends JFrame {
 	private boolean alleSchiffegesetzt=false;
 	private JButton btnWeiter;
 	private JButton btnZufaelligPlatzieren;
+	private int modus;
 
 	/**
 	 * Launch the application.
@@ -66,7 +67,7 @@ public class Guiplace extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Guiplace(int g) {
+	public Guiplace(int g, int m) {
 		getContentPane().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {			//gibt position der maus beim klicken aus
@@ -116,6 +117,7 @@ public class Guiplace extends JFrame {
 		setContentPane(contentPane);*/
 		
 		this.groesse = g;
+		this.modus = m;
 		this.spielfeld = new Feld(g);
 		
 		/*//////////testweise feld befuellen (feldgroesse = 10)//////////////////////////////////
@@ -286,7 +288,7 @@ public class Guiplace extends JFrame {
 		btnWeiter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				//Button weiter
 				dispose();
-				new Guishot(spielfeld);
+				new Guishot(spielfeld, modus);
 			}
 		});
 		btnWeiter.setBounds(885, 535, 97, 25);

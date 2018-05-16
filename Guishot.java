@@ -26,7 +26,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.awt.event.ActionEvent;
 
@@ -44,6 +46,7 @@ public class Guishot extends JFrame {
 	JLabel lblEigenePunkte;
 	private int eigenePunkte, gegnerischepunkte;
 	Cursor c;
+	private int modus;
 
 	/**
 	 * Launch the application.
@@ -64,7 +67,7 @@ public class Guishot extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Guishot(Feld f) {
+	public Guishot(Feld f, int m) {
 		
 		
 		getContentPane().addMouseListener(new MouseAdapter() {
@@ -174,6 +177,7 @@ public class Guishot extends JFrame {
 		setContentPane(contentPane);*/
 		
 		this.spieler = f;
+		this.modus = m;
 		fgroesse = spieler.getGroesse();
 		//noch zum test
 		//spieler2 = new Feld(fgroesse);	//Feld des Gegners(KI) KI rudimentär implementiert, noch testen!
@@ -209,9 +213,24 @@ public class Guishot extends JFrame {
 		JButton btnSpeichernBeenden = new JButton("Speichern  und beenden");
 		btnSpeichernBeenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {		//speichern und beenden button
+				
+				int anreihe;
+				if(schiesse)
+				{
+					anreihe = 1;
+				}
+				else
+				{
+					anreihe = 0;
+				}
+				
+				Spielstand spielstand = new Spielstand(spieler, spieler2, gegner, gegner2, modus, anreihe);
+				
+				
 				////speichern
 				JFileChooser fc = new JFileChooser();
 				fc.showSaveDialog(null);
+				
 				
 				////
 				System.exit(0);
