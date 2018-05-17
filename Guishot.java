@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.EventQueue;
@@ -30,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.URL;
+
 import java.awt.event.ActionEvent;
 
 public class Guishot extends JFrame {
@@ -86,13 +88,14 @@ public class Guishot extends JFrame {
 				    	{
 				    		System.out.println("X:" + posx + ",Y:" + posy);
 				    		int gegnerwert = spieler2.schiessen(posx, posy);
-				    		gegner.feldAendern(posx, posy, gegnerwert);
 				    		
 				    		
-				    		if(gegnerwert == 2 || gegnerwert == 3)
+				    		
+				    		if(gegnerwert == 1 || gegnerwert == 2)
 				    		{
+				    			gegner.feldAendern(posx, posy, gegnerwert+1);
 				    			gegnerischepunkte-=1;
-				    			if(gegnerwert == 3)
+				    			if(gegnerwert == 2)
 				    			{
 				    				gegner.schiffVersenken(posx, posy);
 				    				
@@ -126,11 +129,14 @@ public class Guishot extends JFrame {
 				    			{
 				    				//spieler hat gewonnen
 				    				JOptionPane.showMessageDialog(null, "Gewonnen!");
+				    				System.exit(0);
 				    			}
 				    		}
 				    		else
 				    		{
+				    			gegner.feldAendern(posx, posy, gegnerwert);
 				    			schiesse = false;
+				    			repaint();
 				    			//c.getDefaultCursor();
 				    			Ki.schiesse(spieler, gegner2);		//ki schiesst
 				    			eigenePunkte = spieler.getFeldpunkte();
@@ -140,6 +146,7 @@ public class Guishot extends JFrame {
 				    			{
 				    				//spieler hat verloren
 				    				JOptionPane.showMessageDialog(null, "Verloren!");
+				    				System.exit(0);
 				    			}
 				    			btnSchiessen.setBackground(Color.white);
 				    			btnSchiessen.setEnabled(true);
@@ -230,7 +237,6 @@ public class Guishot extends JFrame {
 				////speichern
 				JFileChooser fc = new JFileChooser();
 				fc.showSaveDialog(null);
-				
 				
 				////
 				System.exit(0);

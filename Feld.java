@@ -364,10 +364,10 @@ public class Feld {
 				if(schiffVersenkt(x,y))
 				{
 					schiffVersenken(x, y);
-					return 3;
+					return 2;
 				}
 					
-				return 2;
+				return 1;
 		}
 		return -1;
 	}

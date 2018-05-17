@@ -62,14 +62,18 @@ public class Ki {
 		while(punkte > 0)
 		{
 			posx = rand.nextInt(f2.getGroesse());
-			posy = rand.nextInt(f2.getGroesse());
+			posy = rand.nextInt(f2.getGroesse());//posx posy an letztem treffer anpassen
 			if(!f2.bereitsBeschossen(posx, posy))
 			{
 				int wert = s.schiessen(posx, posy);
-				f2.feldAendern(posx, posy, wert);
 				if(wert == 0)
 				{
+					f2.feldAendern(posx, posy, wert);
 					return false;
+				}
+				else
+				{
+					f2.feldAendern(posx, posy, wert+1);
 				}
 					
 			}
