@@ -68,7 +68,7 @@ public class Feld {
 	
 	public int getFeldInhalt(int x, int y) 								//gibt Inhalt an feld x y zurueck
 	{
-		if(x > this.x || y > this.y || x < 0 || y < 0)
+		if(x >= this.x || y >= this.y || x < 0 || y < 0)
 			return -1;
 		return feld[x][y];
 	}
@@ -423,6 +423,56 @@ public class Feld {
 			schiffVersenken(x, y+1);
 		if(x-1 >= 0 && getFeldInhalt(x-1, y) == 2)
 			schiffVersenken(x-1, y);
+	}
+	public void schiffVersenkenv2(int x, int y)						//Setzt getroffene felder rekursiv auf versenkt
+	{
+		feldAendern(x, y, 3);										//setzt zusaetzlich die felder drumherum auf wasser
+		
+		if(getFeldInhalt(x+1, y) == 4)
+			feldAendern(x+1, y, 0);
+		
+		if(getFeldInhalt(x+1, y+1) == 4)
+			feldAendern(x+1, y+1, 0);
+		
+		if(getFeldInhalt(x+1, y-1) == 4)
+			feldAendern(x+1, y-1, 0);
+		
+		if(getFeldInhalt(x, y+1) == 4)
+			feldAendern(x, y+1, 0);
+		
+		if(getFeldInhalt(x, y-1) == 4)
+			feldAendern(x, y-1, 0);
+		
+		if(getFeldInhalt(x-1, y) == 4)
+			feldAendern(x-1, y, 0);
+		
+		if(getFeldInhalt(x-1, y-1) == 4)
+			feldAendern(x-1, y-1, 0);
+		
+		if(getFeldInhalt(x-1, y+1) == 4)
+			feldAendern(x-1, y+1, 0);
+		
+		
+		if(getFeldInhalt(x, y-1) == 2)
+		{
+			schiffVersenkenv2(x,y-1);
+		}
+			
+		if(getFeldInhalt(x+1, y) == 2)
+		{
+			schiffVersenkenv2(x+1, y);
+		}
+			
+		if(getFeldInhalt(x, y+1) == 2)
+		{
+			schiffVersenkenv2(x, y+1);
+		}
+			
+		if(getFeldInhalt(x-1, y) == 2)
+		{
+			schiffVersenkenv2(x-1, y);
+		}
+			
 	}
 	public boolean bereitsBeschossen(int x, int y)						//prueft ob position schon beschossen wurde
 	{

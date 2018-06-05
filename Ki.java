@@ -2,6 +2,8 @@ import java.util.Random;
 
 public class Ki {
 	
+	static int punkte = 0;
+	
 	public static boolean alleSchiffeSetzen(Feld f)
 	{
 		int fpunkte = f.getFeldpunkte();
@@ -58,8 +60,7 @@ public class Ki {
 		Random rand = new Random();
 		int posx = rand.nextInt(f2.getGroesse());
 		int posy = rand.nextInt(f2.getGroesse());
-		int punkte = f2.getFeldpunkte();
-		while(punkte > 0)
+		while(punkte < (int)(f2.getGroesse() * f2.getGroesse() * 0.3))
 		{
 			posx = rand.nextInt(f2.getGroesse());
 			posy = rand.nextInt(f2.getGroesse());//posx posy an letztem treffer anpassen
@@ -73,7 +74,11 @@ public class Ki {
 				}
 				else
 				{
+					punkte++;
+					System.out.println("KI fPunkte: " + punkte);
 					f2.feldAendern(posx, posy, wert+1);
+					if(wert == 2)
+						f2.schiffVersenkenv2(posx, posy);
 				}
 					
 			}

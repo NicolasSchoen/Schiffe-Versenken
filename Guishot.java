@@ -98,6 +98,7 @@ public class Guishot extends JFrame {
 				    			if(gegnerwert == 2)
 				    			{
 				    				gegner.schiffVersenken(posx, posy);
+				    				//gegner.schiffVersenkenv2(posx, posy);	//zeigt bei versenktem schiff umliegende wasserfelder an
 				    				
 				    				try {
 					    		        Clip clip = AudioSystem.getClip();
