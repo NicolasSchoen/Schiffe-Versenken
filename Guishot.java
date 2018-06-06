@@ -139,10 +139,16 @@ public class Guishot extends JFrame {
 				    			schiesse = false;
 				    			repaint();
 				    			//c.getDefaultCursor();
-				    			Ki.schiesse(spieler, gegner2);		//ki schiesst
-				    			eigenePunkte = spieler.getFeldpunkte();
-				    			lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
-				    			repaint();
+				    			btnSchiessen.setEnabled(false);
+				    			do {
+				    				eigenePunkte = spieler.getFeldpunkte();
+					    			lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
+					    			repaint();
+				    			}while(Ki.schiesse(spieler, gegner2));
+				    			//Ki.schiesse(spieler, gegner2);		//ki schiesst
+				    			//eigenePunkte = spieler.getFeldpunkte();
+				    			//lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
+				    			//repaint();
 				    			if(eigenePunkte == 0)
 				    			{
 				    				//spieler hat verloren
@@ -204,7 +210,7 @@ public class Guishot extends JFrame {
 		gegner2.gegnerInitialisieren();
 		
 		this.setTitle("Schiffe versenken schiessen");
-		this.setSize(1000, 620);
+		this.setSize(1500, 620);
 		this.setResizable(false);
 		this.setLocation(50, 50);
 		getContentPane().setLayout(null);
@@ -290,6 +296,7 @@ public class Guishot extends JFrame {
 		int feldgroesse = 400;			//breite des gezeichneten Feldes
 		int xStart = 50;
 		int xgStart = xStart+feldgroesse+50;
+		int xgvStart = xgStart+feldgroesse+50;
 		int yStart = 100;//xStart-100;//xStart+feldgroesse;
 		
 		//Spielerfeld:
@@ -336,5 +343,28 @@ public class Guishot extends JFrame {
 			}
 				
 		}
+		
+		//gegnerische Sicht:
+		
+				for(int i=0; i<fgroesse; i++)					//j=posX;  i=posY
+				{
+					for(int j=0; j<fgroesse; j++)
+					{
+						g.setColor(Color.black);
+						g.drawRect(xgvStart+(i*(feldgroesse/fgroesse)), yStart+(j*(feldgroesse/fgroesse)), feldgroesse/fgroesse, feldgroesse/fgroesse);
+						switch(gegner2.getFeldInhalt(i, j))	//farbe bestimmen//spieler
+						{
+						case 0:g.setColor(Color.cyan);break;		//wasser
+						case 1:g.setColor(Color.gray);break;		//schiff
+						case 2:g.setColor(Color.red);break;			//getroffenes schiff
+						case 3:g.setColor(Color.black);break;		//versenktes schiff
+						case 4:g.setColor(Color.white);break;		//unbekannt
+						}
+						
+						g.fillRect(xgvStart+(i*(feldgroesse/fgroesse))+1, yStart+(j*(feldgroesse/fgroesse))+1, feldgroesse/fgroesse-1, feldgroesse/fgroesse-1);
+						
+					}
+						
+				}
     } 
 }

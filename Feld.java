@@ -73,6 +73,12 @@ public class Feld {
 		return feld[x][y];
 	}
 	
+	public boolean inFeld(int x, int y) {
+		if(x >= 0 && x< this.x && y >= 0 && y < this.x)
+			return true;
+		return false;
+	}
+	
 	public boolean schiffPlatzieren(int x, int y, int g, int r)			//platziere Schiff der laenge g und richtung r an x,y
 	{
 		if(x >= 0 && x < this.x && y >= 0 && y < this.y)//pos x,y in feld
@@ -357,7 +363,11 @@ public class Feld {
 		if(x>= 0 && x < this.x && y>= 0 && y< this.x)	//koordinaten in feld
 		{
 			if(this.getFeldInhalt(x, y) == 0)
+			{
+				//this.feldAendern(x, y, 4);
 				return 0;
+			}
+				
 			if(this.getFeldInhalt(x, y) == 1)
 				this.feldAendern(x, y, 2);
 				//pruefen ob schiff versenkt, dann return 3
