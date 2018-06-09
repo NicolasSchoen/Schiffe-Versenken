@@ -31,7 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.URL;
-
+import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 
 public class Guishot extends JFrame {
@@ -136,6 +136,17 @@ public class Guishot extends JFrame {
 				    		else
 				    		{
 				    			gegner.feldAendern(posx, posy, gegnerwert);
+				    			
+				    			try {
+				    		        Clip clip = AudioSystem.getClip();
+				    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+				    		          Main.class.getResourceAsStream("/media/wasser.wav"));
+				    		        clip.open(inputStream);
+				    		        clip.start(); 
+				    		      } catch (Exception e) {
+				    		        System.err.println(e.getMessage());
+				    		      }
+				    			
 				    			schiesse = false;
 				    			repaint();
 				    			//c.getDefaultCursor();
@@ -144,6 +155,14 @@ public class Guishot extends JFrame {
 				    				eigenePunkte = spieler.getFeldpunkte();
 					    			lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
 					    			repaint();
+					    			
+					    			/*try {										//wartete nach jedem schiessen 1 sekunde, zum nachvollziehen
+					    				TimeUnit.SECONDS.sleep(1);
+					    			} catch (InterruptedException e) {
+					    				// TODO Auto-generated catch block
+					    				e.printStackTrace();
+					    			}*/
+					    			
 				    			}while(Ki.schiesse(spieler, gegner2));
 				    			//Ki.schiesse(spieler, gegner2);		//ki schiesst
 				    			//eigenePunkte = spieler.getFeldpunkte();
@@ -158,15 +177,7 @@ public class Guishot extends JFrame {
 				    			btnSchiessen.setBackground(Color.white);
 				    			btnSchiessen.setEnabled(true);
 				    			
-				    			try {
-				    		        Clip clip = AudioSystem.getClip();
-				    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-				    		          Main.class.getResourceAsStream("/media/wasser.wav"));
-				    		        clip.open(inputStream);
-				    		        clip.start(); 
-				    		      } catch (Exception e) {
-				    		        System.err.println(e.getMessage());
-				    		      }
+				    			
 				    			
 				    		}
 				    		

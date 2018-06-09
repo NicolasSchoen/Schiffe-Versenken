@@ -9,13 +9,17 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
+import java.net.*;
 
 public class Guijoin extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
 	private JTextField textField_1;
+	private int port;
+	private String ipaddr;
 
 	/**
 	 * Launch the application.
@@ -45,7 +49,7 @@ public class Guijoin extends JFrame {
 		setContentPane(contentPane);*/
 		
 		
-		this.setTitle("Schiffe versenken-Server konfigurieren");
+		this.setTitle("Schiffe versenken-Spiel beitreten");
 		this.setSize(1000, 620);
 		this.setResizable(false);
 		this.setLocation(50, 50);
@@ -63,6 +67,24 @@ public class Guijoin extends JFrame {
 		JButton btnServerBeitreten = new JButton("Server beitreten");
 		btnServerBeitreten.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				//Button server beitreten
+				
+				if(textField.getText() != null && textField_1.getText() != null)
+				{
+					port = Integer.parseInt(textField.getText());
+					ipaddr = textField_1.getText();
+					try {
+						Socket s = new Socket(ipaddr, port);
+						System.out.println("Connection established.");
+					} catch(IOException e) {
+						e.printStackTrace();
+					}
+					
+				}
+				else
+				{
+					System.out.println("Bitte Textfelder fuellen!");
+				}
+				
 				
 			}
 		});

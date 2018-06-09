@@ -9,14 +9,20 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
+import java.net.*;
+import java.io.*;
 
 public class Guiserver extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
+	private JLabel lblIpadresse;
+	private JLabel lblStatusMitspielerNicht;
 	private int feldgroesse;
 	private int modus;
+	private int port=12345;
 
 	/**
 	 * Launch the application.
@@ -59,6 +65,7 @@ public class Guiserver extends JFrame {
 		getContentPane().add(lblPort);
 		
 		textField = new JTextField();
+		textField.setText("12345");
 		textField.setBounds(127, 59, 86, 20);
 		getContentPane().add(textField);
 		textField.setColumns(10);
@@ -67,18 +74,48 @@ public class Guiserver extends JFrame {
 		btnServerStarten.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				//Button starte server
 				
+				port = Integer.parseInt(textField.getText());
+				
+				
+				ServerSocket servSocket = null;
+				try {
+				    servSocket = new ServerSocket(port);
+				    System.out.println("IP-Adresse:" + InetAddress.getLocalHost());
+				    //lblIpadresse.setText("IP-Adresse: " + InetAddress.getLocalHost());
+				    repaint();
+				} catch (IOException e) {
+				    e.printStackTrace();
+				}
+				System.out.println("Server gestartet, warte auf Client zum joinen");
+				//while(true){
+					try {
+				    Socket clientSocket = servSocket.accept();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					lblStatusMitspielerNicht.setText("Status: Spieler beigetreten");
+					
+
+				//}
+				
 			}
 		});
 		btnServerStarten.setBounds(93, 87, 120, 23);
 		getContentPane().add(btnServerStarten);
 		
-		JLabel lblStatusMitspielerNicht = new JLabel("Status Mitspieler: nicht beigetreten");
+		lblStatusMitspielerNicht = new JLabel("Status Mitspieler: nicht beigetreten");
 		lblStatusMitspielerNicht.setBounds(93, 121, 225, 14);
 		getContentPane().add(lblStatusMitspielerNicht);
 		
-		JLabel lblIpadresse = new JLabel("IP-Adresse: ");
+		lblIpadresse = new JLabel("IP-Adresse: ");
 		lblIpadresse.setBounds(93, 37, 184, 14);
 		getContentPane().add(lblIpadresse);
 		this.setVisible(true);
+		try {
+			lblIpadresse.setText("IP-Adresse: " + InetAddress.getLocalHost());
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }
