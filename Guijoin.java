@@ -9,7 +9,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.awt.event.ActionEvent;
 import java.net.*;
 
@@ -72,17 +76,48 @@ public class Guijoin extends JFrame {
 				{
 					port = Integer.parseInt(textField.getText());
 					ipaddr = textField_1.getText();
+					BufferedReader in = null;
+					BufferedReader usr = null;
+					Writer out = null;
 					try {
 						Socket s = new Socket(ipaddr, port);
 						System.out.println("Connection established.");
+						
+						// Ein- und Ausgabestrom des Sockets ermitteln
+						// und als BufferedReader bzw. Writer verpacken
+						// (damit man zeilen- bzw. zeichenweise statt byteweise arbeiten kann).
+						in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+						out = new OutputStreamWriter(s.getOutputStream());
+						
+						// Standardeingabestrom ebenfalls als BufferedReader verpacken.
+						usr = new BufferedReader(new InputStreamReader(System.in));
+						
+						
 					} catch(IOException e) {
+						JOptionPane.showMessageDialog(null, "Daten stimmen nicht!");
+						e.printStackTrace();
+					}
+					
+					
+					try {
+						String line = in.readLine();
+					    System.out.println("<<< " + line);
+					    
+					    if (line.contains("Feld"))
+					    {
+					    	String[] arr = line.split(" ");
+					    	dispose();
+					    	new Guiplace(Integer.valueOf(arr[1]), 1);
+					    }
+					    
+					}catch (IOException e) {
 						e.printStackTrace();
 					}
 					
 				}
 				else
 				{
-					System.out.println("Bitte Textfelder fuellen!");
+					JOptionPane.showMessageDialog(null, "Bitte Adresse und Port angeben!");
 				}
 				
 				

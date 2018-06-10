@@ -9,7 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.awt.event.ActionEvent;
 import java.net.*;
 import java.io.*;
@@ -75,6 +74,9 @@ public class Guiserver extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {				//Button starte server
 				
 				port = Integer.parseInt(textField.getText());
+				BufferedReader in = null;
+				BufferedReader usr = null;
+				Writer out = null;
 				
 				
 				ServerSocket servSocket = null;
@@ -84,16 +86,44 @@ public class Guiserver extends JFrame {
 				    //lblIpadresse.setText("IP-Adresse: " + InetAddress.getLocalHost());
 				    repaint();
 				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null, "Port bereits belegt!");
 				    e.printStackTrace();
 				}
 				System.out.println("Server gestartet, warte auf Client zum joinen");
 				//while(true){
-					try {
-				    Socket clientSocket = servSocket.accept();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					lblStatusMitspielerNicht.setText("Status: Spieler beigetreten");
+				Socket s = null;
+				
+				try {
+					s = servSocket.accept();
+					
+					
+					// Ein- und Ausgabestrom des Sockets ermitteln
+					// und als BufferedReader bzw. Writer verpacken
+					// (damit man zeilen- bzw. zeichenweise statt byteweise arbeiten kann).
+					in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+					out = new OutputStreamWriter(s.getOutputStream());
+					
+					// Standardeingabestrom ebenfalls als BufferedReader verpacken.
+					usr = new BufferedReader(new InputStreamReader(System.in));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				lblStatusMitspielerNicht.setText("Status: Spieler beigetreten");
+				
+				
+				try {
+					out.write(String.format("%s%n", "Feld " + feldgroesse));
+				    out.flush();
+				}catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				dispose();
+				new Guiplace(feldgroesse, modus);
+				
+					
+					
+				
 					
 
 				//}
@@ -112,7 +142,7 @@ public class Guiserver extends JFrame {
 		getContentPane().add(lblIpadresse);
 		this.setVisible(true);
 		try {
-			lblIpadresse.setText("IP-Adresse: " + InetAddress.getLocalHost());
+			lblIpadresse.setText("IP-Adresse: " + Inet4Address.getLocalHost());
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
