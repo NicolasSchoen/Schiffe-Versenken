@@ -119,7 +119,7 @@ public class Guiserver extends JFrame {
 				}
 				
 				dispose();
-				new Guiplace(feldgroesse, modus);
+				new Guiplace(feldgroesse, modus, s, true);
 				
 					
 					

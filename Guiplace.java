@@ -18,6 +18,12 @@ import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.Socket;
 
 public class Guiplace extends JFrame {
 
@@ -47,6 +53,11 @@ public class Guiplace extends JFrame {
 	private JButton btnWeiter;
 	private JButton btnZufaelligPlatzieren;
 	private int modus;
+	private boolean reihe;
+	private BufferedReader in = null;
+	private BufferedReader usr = null;
+	private Writer out = null;
+	private Socket s = null;
 
 	/**
 	 * Launch the application.
@@ -288,7 +299,10 @@ public class Guiplace extends JFrame {
 		btnWeiter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				//Button weiter
 				dispose();
-				new Guishot(spielfeld, modus);
+				if(modus == 2)
+					new Guishot(spielfeld, modus);
+				else
+					new Guishot(spielfeld, modus, s, reihe);
 			}
 		});
 		btnWeiter.setBounds(885, 535, 97, 25);
@@ -297,6 +311,24 @@ public class Guiplace extends JFrame {
 		
 		
 		this.setVisible(true);
+	}
+	
+	public Guiplace(int g, int m, Socket s, boolean reihe) {
+		this(g,m);
+		this.s = s;
+		this.reihe = reihe;
+		try {
+			// Ein- und Ausgabestrom des Sockets ermitteln
+			// und als BufferedReader bzw. Writer verpacken
+			// (damit man zeilen- bzw. zeichenweise statt byteweise arbeiten kann).
+			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			out = new OutputStreamWriter(s.getOutputStream());
+			
+			// Standardeingabestrom ebenfalls als BufferedReader verpacken.
+			usr = new BufferedReader(new InputStreamReader(System.in));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private String getRichtungName()

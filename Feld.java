@@ -5,7 +5,7 @@ public class Feld {
 	//--------------------------------------------------------------------------------
 	
 	
-	private int x,y;
+	private int x;
 	private int feld[][];
 	private int schiffsfelder, belegteSchiffsfelder;
 	
@@ -14,7 +14,6 @@ public class Feld {
 		if(g >= 5 && g<=30)
 		{
 			this.x = g;
-			this.y = g;
 			feld = new int[g][g];
 			schiffsfelder = (int) (g*g*0.3); 
 			belegteSchiffsfelder = schiffsfelder;
@@ -68,9 +67,10 @@ public class Feld {
 	
 	public int getFeldInhalt(int x, int y) 								//gibt Inhalt an feld x y zurueck
 	{
-		if(x >= this.x || y >= this.y || x < 0 || y < 0)
-			return -1;
-		return feld[x][y];
+		if(inFeld(x, y))
+			return feld[x][y];
+		return -1;
+		
 	}
 	
 	public boolean inFeld(int x, int y) {
@@ -81,7 +81,7 @@ public class Feld {
 	
 	public boolean schiffPlatzieren(int x, int y, int g, int r)			//platziere Schiff der laenge g und richtung r an x,y
 	{
-		if(x >= 0 && x < this.x && y >= 0 && y < this.y)//pos x,y in feld
+		if(inFeld(x, y))//pos x,y in feld
 		{
 			if(r>=0 && r<4)//richtung gueltig
 			{
@@ -336,7 +336,7 @@ public class Feld {
 	
 	public boolean feldAendern(int x, int y, int wert)					//Aendere feldwert an pos x y zu wert
 	{
-		if(x >= 0 && x < this.x && y >= 0 && y < this.y)					//pruefe ob pos in feld
+		if(inFeld(x, y))					//pruefe ob pos in feld
 		{
 			if(wert >= 0 && wert <= 4)									//pruefe ob wert gueltig
 			{
@@ -360,7 +360,7 @@ public class Feld {
 	}
 	public int schiessen(int x, int y)
 	{
-		if(x>= 0 && x < this.x && y>= 0 && y< this.x)	//koordinaten in feld
+		if(inFeld(x, y))	//koordinaten in feld
 		{
 			if(this.getFeldInhalt(x, y) == 0)
 			{
@@ -486,7 +486,7 @@ public class Feld {
 	}
 	public boolean bereitsBeschossen(int x, int y)						//prueft ob position schon beschossen wurde
 	{
-		if(x>=0 && x<this.x && y>= 0 && y<this.x)
+		if(inFeld(x, y))
 			if(feld[x][y] == 0 || feld[x][y] == 2 || feld[x][y] == 3)
 				return true;
 		return false;

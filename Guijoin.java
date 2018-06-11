@@ -72,15 +72,16 @@ public class Guijoin extends JFrame {
 		btnServerBeitreten.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				//Button server beitreten
 				
-				if(textField.getText() != null && textField_1.getText() != null)
+				if(!textField.getText().equals("") && !textField_1.getText().equals(""))
 				{
 					port = Integer.parseInt(textField.getText());
 					ipaddr = textField_1.getText();
 					BufferedReader in = null;
 					BufferedReader usr = null;
 					Writer out = null;
+					Socket s = null;
 					try {
-						Socket s = new Socket(ipaddr, port);
+						s = new Socket(ipaddr, port);
 						System.out.println("Connection established.");
 						
 						// Ein- und Ausgabestrom des Sockets ermitteln
@@ -101,13 +102,13 @@ public class Guijoin extends JFrame {
 					
 					try {
 						String line = in.readLine();
-					    System.out.println("<<< " + line);
+					    System.out.println(line);
 					    
 					    if (line.contains("Feld"))
 					    {
 					    	String[] arr = line.split(" ");
 					    	dispose();
-					    	new Guiplace(Integer.valueOf(arr[1]), 1);
+					    	new Guiplace(Integer.valueOf(arr[1]), 1, s, false);
 					    }
 					    
 					}catch (IOException e) {

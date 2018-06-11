@@ -26,10 +26,15 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.Socket;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
@@ -42,13 +47,18 @@ public class Guishot extends JFrame {
 	private Feld gegner;
 	private Feld gegner2;
 	private int fgroesse;
-	private boolean schiesse = false;
+	private boolean schiesse = true;
+	private boolean multiplayer = false;
 	JButton btnSchiessen;
 	JLabel lblGegnerpunkte;
 	JLabel lblEigenePunkte;
 	private int eigenePunkte, gegnerischepunkte;
 	Cursor c;
 	private int modus;
+	private BufferedReader in = null;
+	private BufferedReader usr = null;
+	private Writer out = null;
+	private Socket s = null;
 
 	/**
 	 * Launch the application.
@@ -80,112 +90,13 @@ public class Guishot extends JFrame {
 			    int posx = (x-500)/(400/fgroesse);
 			    int posy = (y-70)/(400/fgroesse);
 			    
-			    if(schiesse == true)
+			    if(multiplayer == false)
 			    {
-			    	if(posx >= 0 && posx < fgroesse && posy >= 0 && posy < fgroesse)
-			    	{
-			    		if(!gegner.bereitsBeschossen(posx, posy))	//schiesse nur wenn noch nicht geschossen
-				    	{
-				    		System.out.println("X:" + posx + ",Y:" + posy);
-				    		int gegnerwert = spieler2.schiessen(posx, posy);
-				    		
-				    		
-				    		
-				    		if(gegnerwert == 1 || gegnerwert == 2)
-				    		{
-				    			gegner.feldAendern(posx, posy, gegnerwert+1);
-				    			gegnerischepunkte-=1;
-				    			if(gegnerwert == 2)
-				    			{
-				    				gegner.schiffVersenken(posx, posy);
-				    				//gegner.schiffVersenkenv2(posx, posy);	//zeigt bei versenktem schiff umliegende wasserfelder an
-				    				
-				    				try {
-					    		        Clip clip = AudioSystem.getClip();
-					    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-					    		          Main.class.getResourceAsStream("/media/explosion.wav"));
-					    		        clip.open(inputStream);
-					    		        clip.start(); 
-					    		      } catch (Exception e) {
-					    		        System.err.println(e.getMessage());
-					    		      }
-				    			}
-				    			else
-				    			{
-				    				try {
-					    		        Clip clip = AudioSystem.getClip();
-					    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-					    		          Main.class.getResourceAsStream("/media/treffer.wav"));
-					    		        clip.open(inputStream);
-					    		        clip.start(); 
-					    		      } catch (Exception e) {
-					    		        System.err.println(e.getMessage());
-					    		      }
-				    			}
-				    				
-				    			repaint();
-				    			//System.out.println("gegnerische Punkte:" + gegnerischepunkte);
-				    			lblGegnerpunkte.setText("Gegnerpunkte: " + gegnerischepunkte);
-				    			if(gegnerischepunkte <=0)
-				    			{
-				    				//spieler hat gewonnen
-				    				JOptionPane.showMessageDialog(null, "Gewonnen!");
-				    				System.exit(0);
-				    			}
-				    		}
-				    		else
-				    		{
-				    			gegner.feldAendern(posx, posy, gegnerwert);
-				    			
-				    			try {
-				    		        Clip clip = AudioSystem.getClip();
-				    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-				    		          Main.class.getResourceAsStream("/media/wasser.wav"));
-				    		        clip.open(inputStream);
-				    		        clip.start(); 
-				    		      } catch (Exception e) {
-				    		        System.err.println(e.getMessage());
-				    		      }
-				    			
-				    			schiesse = false;
-				    			repaint();
-				    			//c.getDefaultCursor();
-				    			btnSchiessen.setEnabled(false);
-				    			do {
-				    				eigenePunkte = spieler.getFeldpunkte();
-					    			lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
-					    			repaint();
-					    			
-					    			/*try {										//wartete nach jedem schiessen 1 sekunde, zum nachvollziehen
-					    				TimeUnit.SECONDS.sleep(1);
-					    			} catch (InterruptedException e) {
-					    				// TODO Auto-generated catch block
-					    				e.printStackTrace();
-					    			}*/
-					    			
-				    			}while(Ki.schiesse(spieler, gegner2));
-				    			//Ki.schiesse(spieler, gegner2);		//ki schiesst
-				    			//eigenePunkte = spieler.getFeldpunkte();
-				    			//lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
-				    			//repaint();
-				    			if(eigenePunkte == 0)
-				    			{
-				    				//spieler hat verloren
-				    				JOptionPane.showMessageDialog(null, "Verloren!");
-				    				System.exit(0);
-				    			}
-				    			btnSchiessen.setBackground(Color.white);
-				    			btnSchiessen.setEnabled(true);
-				    			
-				    			
-				    			
-				    		}
-				    		
-				    		
-				    	}
-			    	
-			    	}
-			    	
+			    	schiesseSingleplayer(posx, posy);
+			    }
+			    else
+			    {
+			    	schiesseMultiplayer(posx, posy);
 			    }
 			    
 			}
@@ -229,6 +140,14 @@ public class Guishot extends JFrame {
 		JButton btnBeenden = new JButton("Beenden");
 		btnBeenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {		//beenden button
+				
+				try {
+					s.close();
+				} catch (IOException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
+				
 				System.exit(0);
 			}
 		});
@@ -257,6 +176,12 @@ public class Guishot extends JFrame {
 				fc.showSaveDialog(null);
 				
 				////
+				try {
+					s.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				System.exit(0);
 			}
 		});
@@ -300,6 +225,320 @@ public class Guishot extends JFrame {
 		lblGegnerpunkte.setText("Gegnerpunkte: " + gegnerischepunkte);
 		lblEigenePunkte.setText("eigene Punkte: " + eigenePunkte);
 		this.setVisible(true);
+	}
+	
+	public Guishot(Feld f, int m, Socket s, boolean reihe) {
+		this(f,m);
+		multiplayer = true;
+		this.s = s;
+		schiesse = reihe;
+		
+		try {
+			// Ein- und Ausgabestrom des Sockets ermitteln
+			// und als BufferedReader bzw. Writer verpacken
+			// (damit man zeilen- bzw. zeichenweise statt byteweise arbeiten kann).
+			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			out = new OutputStreamWriter(s.getOutputStream());
+			
+			// Standardeingabestrom ebenfalls als BufferedReader verpacken.
+			usr = new BufferedReader(new InputStreamReader(System.in));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+		if(schiesse == false)
+			schiesseMultiplayer(-1, -1);
+	}
+	
+	private void schiesseSingleplayer(int posx, int posy) {
+		if(schiesse == true)
+	    {
+	    	btnSchiessen.setBackground(Color.orange);
+	    	if(posx >= 0 && posx < fgroesse && posy >= 0 && posy < fgroesse)
+	    	{
+	    		if(!gegner.bereitsBeschossen(posx, posy))	//schiesse nur wenn noch nicht geschossen
+		    	{
+		    		System.out.println("X:" + posx + ",Y:" + posy);
+		    		int gegnerwert = spieler2.schiessen(posx, posy);
+		    		
+		    		
+		    		
+		    		if(gegnerwert == 1 || gegnerwert == 2)
+		    		{
+		    			gegner.feldAendern(posx, posy, gegnerwert+1);
+		    			gegnerischepunkte-=1;
+		    			if(gegnerwert == 2)
+		    			{
+		    				gegner.schiffVersenkenv2(posx, posy);
+		    				//gegner.schiffVersenkenv2(posx, posy);	//zeigt bei versenktem schiff umliegende wasserfelder an
+		    				
+		    				try {
+			    		        Clip clip = AudioSystem.getClip();
+			    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+			    		          Main.class.getResourceAsStream("/media/explosion.wav"));
+			    		        clip.open(inputStream);
+			    		        clip.start(); 
+			    		      } catch (Exception e) {
+			    		        System.err.println(e.getMessage());
+			    		      }
+		    			}
+		    			else
+		    			{
+		    				try {
+			    		        Clip clip = AudioSystem.getClip();
+			    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+			    		          Main.class.getResourceAsStream("/media/treffer.wav"));
+			    		        clip.open(inputStream);
+			    		        clip.start(); 
+			    		      } catch (Exception e) {
+			    		        System.err.println(e.getMessage());
+			    		      }
+		    			}
+		    				
+		    			repaint();
+		    			//System.out.println("gegnerische Punkte:" + gegnerischepunkte);
+		    			lblGegnerpunkte.setText("Gegnerpunkte: " + gegnerischepunkte);
+		    			if(gegnerischepunkte <=0)
+		    			{
+		    				//spieler hat gewonnen
+		    				JOptionPane.showMessageDialog(null, "Gewonnen!");
+		    				System.exit(0);
+		    			}
+		    		}
+		    		else
+		    		{
+		    			gegner.feldAendern(posx, posy, gegnerwert);
+		    			
+		    			try {
+		    		        Clip clip = AudioSystem.getClip();
+		    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+		    		          Main.class.getResourceAsStream("/media/wasser.wav"));
+		    		        clip.open(inputStream);
+		    		        clip.start(); 
+		    		      } catch (Exception e) {
+		    		        System.err.println(e.getMessage());
+		    		      }
+		    			
+		    			schiesse = false;
+		    			repaint();
+		    			//c.getDefaultCursor();
+		    			btnSchiessen.setEnabled(false);
+		    			while(schiesse == false)
+		    			{
+		    				eigenePunkte = spieler.getFeldpunkte();
+			    			lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
+			    			repaint();
+			    			if(!Ki.schiesse(spieler, gegner2))
+			    				schiesse = true;
+		    			}
+		    			//do {
+		    				
+			    			
+			    			
+			    			/*try {										//wartete nach jedem schiessen 1 sekunde, zum nachvollziehen
+			    				TimeUnit.SECONDS.sleep(1);
+			    			} catch (InterruptedException e) {
+			    				// TODO Auto-generated catch block
+			    				e.printStackTrace();
+			    			}*/
+			    			
+		    			//}while();
+		    			//Ki.schiesse(spieler, gegner2);		//ki schiesst
+		    			//eigenePunkte = spieler.getFeldpunkte();
+		    			//lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
+		    			//repaint();
+		    			if(eigenePunkte == 0)
+		    			{
+		    				//spieler hat verloren
+		    				JOptionPane.showMessageDialog(null, "Verloren!");
+		    				System.exit(0);
+		    			}
+		    			btnSchiessen.setBackground(Color.white);
+		    			btnSchiessen.setEnabled(true);
+		    			repaint();
+		    			
+		    			
+		    			
+		    		}
+		    		
+		    		
+		    	}
+	    	
+	    	}
+	    	
+	    }
+	    else				//wird nie aufgerufen
+	    {
+	    	//if(!Ki.schiesse(spieler, gegner2))
+	    	//	schiesse = true;
+	    	//JOptionPane.showMessageDialog(null, "Gegner an Reihe!");
+	    }
+	}
+	
+	private void schiesseMultiplayer(int posx, int posy) {
+		if(schiesse) 
+		{
+			if(gegner.inFeld(posx, posy) && !gegner.bereitsBeschossen(posx, posy))
+			{
+				int wert;
+				try {
+					out.write(String.format("%s%n", "Schuss " + posx + "," + posy));
+				    out.flush();
+				}catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				while(true)//warte auf antwort
+				{
+					try {
+						String line = in.readLine();
+					    System.out.println(line);
+					    
+					    if (line.contains("Antwort"))
+					    {
+					    	String[] arr = line.split(" ");
+					    	//dispose();
+					    	wert = Integer.valueOf(arr[1]);
+					    	
+					    	if(wert == 0)
+					    	{
+					    		gegner.feldAendern(posx, posy, wert);
+				    			
+				    			try {
+				    		        Clip clip = AudioSystem.getClip();
+				    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+				    		          Main.class.getResourceAsStream("/media/wasser.wav"));
+				    		        clip.open(inputStream);
+				    		        clip.start(); 
+				    		      } catch (Exception e) {
+				    		        System.err.println(e.getMessage());
+				    		      }
+				    			
+				    			schiesse = false;
+				    			//c.getDefaultCursor();
+				    			
+				    			/*try        
+				    			{
+				    			    Thread.sleep(500);
+				    			} 
+				    			catch(InterruptedException ex) 
+				    			{
+				    			    Thread.currentThread().interrupt();
+				    			}*/
+				    			
+				    			btnSchiessen.setBackground(Color.white);
+				    			repaint();
+				    			break;
+					    	}
+					    	else
+					    	{
+					    		if(wert == 1 || wert == 2)
+					    		{
+					    			gegner.feldAendern(posx, posy, wert+1);
+					    			gegnerischepunkte-=1;
+					    			if(wert == 2)
+					    			{
+					    				gegner.schiffVersenkenv2(posx, posy);
+					    				//gegner.schiffVersenkenv2(posx, posy);	//zeigt bei versenktem schiff umliegende wasserfelder an
+					    				
+					    				try {
+						    		        Clip clip = AudioSystem.getClip();
+						    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+						    		          Main.class.getResourceAsStream("/media/explosion.wav"));
+						    		        clip.open(inputStream);
+						    		        clip.start(); 
+						    		      } catch (Exception e) {
+						    		        System.err.println(e.getMessage());
+						    		      }
+					    			}
+					    			else
+					    			{
+					    				try {
+						    		        Clip clip = AudioSystem.getClip();
+						    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+						    		          Main.class.getResourceAsStream("/media/treffer.wav"));
+						    		        clip.open(inputStream);
+						    		        clip.start(); 
+						    		      } catch (Exception e) {
+						    		        System.err.println(e.getMessage());
+						    		      }
+					    			}
+					    				
+					    			repaint();
+					    			lblGegnerpunkte.setText("Gegnerpunkte: " + gegnerischepunkte);
+					    			if(gegnerischepunkte <=0)
+					    			{
+					    				//spieler hat gewonnen
+					    				JOptionPane.showMessageDialog(null, "Gewonnen!");
+					    				System.exit(0);
+					    			}
+					    			break;
+					    		}
+					    	}
+					    }
+					    
+					}catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			}
+		}
+		else
+		{
+			
+			while(true) //Warte auf schuss
+			{
+				try {
+					String line = in.readLine();
+				    System.out.println(line);
+				    
+				    if (line.contains("Schuss"))
+				    {
+				    	String[] arr = line.split(" ");
+				    	String[] pos = arr[1].split(",");
+				    	int positx = Integer.valueOf(pos[0]);
+				    	int posity = Integer.valueOf(pos[1]);
+				    	
+				    	int wert = spieler.schiessen(positx, posity);
+				    	
+				    	
+				    	try {
+							out.write(String.format("%s%n", "Antwort " + wert));
+						    out.flush();
+						}catch (IOException e) {
+							e.printStackTrace();
+						}
+				    	
+				    	if(wert == 0)
+				    	{
+				    		schiesse = true;
+				    	}
+				    	else
+				    	{
+				    		eigenePunkte = spieler.getFeldpunkte();
+			    			lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
+			    			
+			    			
+			    			
+			    			if(eigenePunkte == 0)
+			    			{
+			    				//spieler hat verloren
+			    				JOptionPane.showMessageDialog(null, "Verloren!");
+			    				System.exit(0);
+			    			}
+			    			
+				    	}
+				    	repaint();
+				    	break;
+				    }
+				    
+				}catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	public void paint(Graphics g){ 
