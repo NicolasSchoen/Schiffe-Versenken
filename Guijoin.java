@@ -135,6 +135,65 @@ public class Guijoin extends JFrame {
 		textField_1.setColumns(10);
 		textField_1.setBounds(163, 34, 150, 20);
 		getContentPane().add(textField_1);
+		
+		JButton btnAlsKiBeitreten = new JButton("Als Ki beitreten");
+		btnAlsKiBeitreten.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {									//Button als Ki beitreten
+				
+				if(!textField.getText().equals("") && !textField_1.getText().equals(""))
+				{
+					port = Integer.parseInt(textField.getText());
+					ipaddr = textField_1.getText();
+					BufferedReader in = null;
+					BufferedReader usr = null;
+					Writer out = null;
+					Socket s = null;
+					try {
+						s = new Socket(ipaddr, port);
+						System.out.println("Connection established.");
+						
+						// Ein- und Ausgabestrom des Sockets ermitteln
+						// und als BufferedReader bzw. Writer verpacken
+						// (damit man zeilen- bzw. zeichenweise statt byteweise arbeiten kann).
+						in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+						out = new OutputStreamWriter(s.getOutputStream());
+						
+						// Standardeingabestrom ebenfalls als BufferedReader verpacken.
+						usr = new BufferedReader(new InputStreamReader(System.in));
+						
+						
+					} catch(IOException e) {
+						JOptionPane.showMessageDialog(null, "Daten stimmen nicht!");
+						e.printStackTrace();
+					}
+					
+					
+					try {
+						String line = in.readLine();
+					    System.out.println(line);
+					    
+					    if (line.contains("Feld"))
+					    {
+					    	String[] arr = line.split(" ");
+					    	dispose();
+					    	new Guiplace(Integer.valueOf(arr[1]), 3, s, false);
+					    }
+					    
+					}catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Bitte Adresse und Port angeben!");
+				}
+				
+				
+			}
+		});
+		btnAlsKiBeitreten.setBounds(163, 124, 150, 23);
+		getContentPane().add(btnAlsKiBeitreten);
 		this.setVisible(true);
 	}
 }

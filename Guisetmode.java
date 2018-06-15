@@ -96,6 +96,18 @@ int wert = Integer.parseInt(textField.getText());
 		btnCvc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {			//Button cvc
 				
+				int wert = Integer.parseInt(textField.getText());
+				
+				if(wert >= 5 && wert <= 30 )
+				{
+					dispose();
+					new Guiserver(wert, 3);
+					//setship.setVisible(true);
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Bitte Zahl zwischen 5 und 30 eingeben!");
+				}
 			}
 		});
 		btnCvc.setBounds(135, 273, 181, 43);

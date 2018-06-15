@@ -36,6 +36,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.Socket;
 import java.net.URL;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 
@@ -96,7 +97,8 @@ public class Guishot extends JFrame {
 			    }
 			    else
 			    {
-			    	schiesseMultiplayer(posx, posy);
+			    	if(schiesse)
+			    		schiesseMultiplayer(posx, posy);
 			    }
 			    
 			}
@@ -246,9 +248,325 @@ public class Guishot extends JFrame {
 			e.printStackTrace();
 		}
 		
+		if(modus == 1) {
+			while(schiesse == false)
+				waitforShot();
+		}
+		else
+		{
+			if(modus == 3) {
+				schiesseKIMult();
+			}
+		}
 		
-		if(schiesse == false)
-			schiesseMultiplayer(-1, -1);
+		
+		
+	}
+	
+	private void schiesseKIMult() {
+		int punkte = 0;
+		boolean oben=false;
+		boolean rechts=false;
+		boolean unten=false;
+		boolean links=false;
+		
+		boolean trefa=false;
+		int trefx = 0;
+		int trefy = 0;
+			
+		int tref2x = 0;
+		int tref2y = 0;
+		
+		
+		
+		while(true)
+		{
+				
+			
+			Random rand = new Random();
+			int posx = rand.nextInt(gegner.getGroesse());
+			int posy = rand.nextInt(gegner.getGroesse());
+			if(punkte < (int)(gegner.getGroesse() * gegner.getGroesse() * 0.3) && schiesse)
+			{
+				/*try {
+					TimeUnit.SECONDS.sleep(1);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
+				System.out.println("Ki tut was");
+				
+				
+				
+				//Wenn getroffen
+				if(trefa == true) {
+					if(oben == true) {
+						System.out.println("oben");
+						if(gegner.inFeld(tref2x, tref2y-1) && !gegner.bereitsBeschossen(tref2x, tref2y-1))
+						{
+							tref2y--;
+							int wert = multShot(tref2x, tref2y);
+							if(wert == 1)
+							{
+								punkte++;
+								rechts = links = false;
+								System.out.println("KI fPunkte: " + punkte + "Schiff getroffen");
+								gegner.feldAendern(tref2x, tref2y, wert+1);
+								schiesse = true;
+								continue;
+							}
+							if(wert == 2)
+							{
+								punkte++;
+								System.out.println("KI fPunkte: " + punkte + "Schiff versenkt");
+								gegner.feldAendern(tref2x, tref2y, wert+1);
+								gegner.schiffVersenkenv2(tref2x, tref2y);
+								trefa = false;
+								schiesse = true;
+								continue;
+							}
+							if(wert == 0)
+							{
+								gegner.feldAendern(tref2x, tref2y, wert);
+								tref2x = trefx;
+								tref2y = trefy;
+								oben = false;
+								schiesse = false;
+								continue;
+							}	
+						}
+						else
+						{
+							tref2x = trefx;
+							tref2y = trefy;
+							oben = false;
+						}
+					}
+					
+					if(rechts == true) {
+						System.out.println("rechts");
+						if(gegner.inFeld(tref2x+1, tref2y) && !gegner.bereitsBeschossen(tref2x+1, tref2y))
+						{
+							tref2x++;
+							int wert = multShot(tref2x, tref2y);
+							if(wert == 1)
+							{
+								punkte++;
+								oben = unten = false;
+								System.out.println("KI fPunkte: " + punkte + "Schiff getroffen");
+								gegner.feldAendern(tref2x, tref2y, wert+1);
+								schiesse = true;
+								continue;
+							}
+							if(wert == 2)
+							{
+								punkte++;
+								System.out.println("KI fPunkte: " + punkte + "Schiff versenkt");
+								gegner.feldAendern(tref2x, tref2y, wert+1);
+								gegner.schiffVersenkenv2(tref2x, tref2y);
+								trefa = false;
+								schiesse = true;
+								continue;
+							}
+							if(wert == 0)
+							{
+								gegner.feldAendern(tref2x, tref2y, wert);
+								tref2x = trefx;
+								tref2y = trefy;
+								rechts = false;
+								schiesse = false;
+								continue;
+							}	
+						}
+						else
+						{
+							tref2x = trefx;
+							tref2y = trefy;
+							rechts = false;
+						}
+					}
+					
+					if(unten == true) {
+						System.out.println("unten");
+						if(gegner.inFeld(tref2x, tref2y+1) && !gegner.bereitsBeschossen(tref2x, tref2y+1))
+						{
+							tref2y++;
+							int wert = multShot(tref2x, tref2y);
+							if(wert == 1)
+							{
+								punkte++;
+								rechts = links = false;
+								System.out.println("KI fPunkte: " + punkte + "Schiff getroffen");
+								gegner.feldAendern(tref2x, tref2y, wert+1);
+								schiesse = true;
+								continue;
+							}
+							if(wert == 2)
+							{
+								punkte++;
+								System.out.println("KI fPunkte: " + punkte + "Schiff versenkt");
+								gegner.feldAendern(tref2x, tref2y, wert+1);
+								gegner.schiffVersenkenv2(tref2x, tref2y);
+								trefa = false;
+								schiesse = true;
+								continue;
+							}
+							if(wert == 0)
+							{
+								gegner.feldAendern(tref2x, tref2y, wert);
+								tref2x = trefx;
+								tref2y = trefy;
+								unten = false;
+								schiesse = false;
+								continue;
+							}	
+						}
+						else
+						{
+							tref2x = trefx;
+							tref2y = trefy;
+							unten = false;
+						}
+					}
+					
+					if(links == true) {
+						System.out.println("links");
+						if(gegner.inFeld(tref2x-1, tref2y) && !gegner.bereitsBeschossen(tref2x-1, tref2y))
+						{
+							tref2x--;
+							int wert = multShot(tref2x, tref2y);
+							if(wert == 1)
+							{
+								punkte++;
+								oben = unten = false;
+								System.out.println("KI fPunkte: " + punkte + "Schiff getroffen");
+								gegner.feldAendern(tref2x, tref2y, wert+1);
+								schiesse = true;
+								continue;
+							}
+							if(wert == 2)
+							{
+								punkte++;
+								System.out.println("KI fPunkte: " + punkte + "Schiff versenkt");
+								gegner.feldAendern(tref2x, tref2y, wert+1);
+								gegner.schiffVersenkenv2(tref2x, tref2y);
+								trefa = false;
+								schiesse = true;
+								continue;
+							}
+							if(wert == 0)
+							{
+								gegner.feldAendern(tref2x, tref2y, wert);
+								tref2x = trefx;
+								tref2y = trefy;
+								links = false;
+								schiesse = false;
+								continue;
+							}	
+						}
+						else
+						{
+							tref2x = trefx;
+							tref2y = trefy;
+							links = false;
+						}
+					}
+					schiesse = false;
+					continue;
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				//Wenn nicht getroffen
+				
+				posx = rand.nextInt(gegner.getGroesse());
+				posy = rand.nextInt(gegner.getGroesse());
+				
+				while(gegner.bereitsBeschossen(posx, posy))
+				{
+					posx = rand.nextInt(gegner.getGroesse());
+					posy = rand.nextInt(gegner.getGroesse());
+				}
+				if(!gegner.bereitsBeschossen(posx, posy))
+				{
+					int wert = multShot(posx, posy);
+					if(wert == 0)
+					{
+						gegner.feldAendern(posx, posy, wert);
+						schiesse = false;
+						continue;
+					}
+					else
+					{
+						punkte++;
+						System.out.println("KI fPunkte: " + punkte);
+						gegner.feldAendern(posx, posy, wert+1);
+						trefa = true;
+						trefx = tref2x = posx;
+						trefy = tref2y= posy;
+						oben = rechts = unten = links = true;
+						if(wert == 2)
+							gegner.schiffVersenkenv2(posx, posy);
+						schiesse = true;
+						continue;
+					}
+						
+				}
+			}
+			else
+			{
+				if(punkte >= (int)(gegner.getGroesse() * gegner.getGroesse() * 0.3))
+				{
+					JOptionPane.showMessageDialog(null, "Gewonnen!");
+					System.exit(0);
+				}
+				
+			}
+			zeichneFeldNeu();
+			
+			while(schiesse == false)
+				waitforShot();
+		}
+			
+
+	}
+	
+	private int multShot(int x, int y) {
+		
+		int wert;
+		try {
+			out.write(String.format("%s%n", "Schuss " + x + "," + y));
+		    out.flush();
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		//while(true)//warte auf antwort
+		//{
+			try {
+				String line = in.readLine();
+			    System.out.println(line);
+			    
+			    if (line.contains("Antwort"))
+			    {
+			    	String[] arr = line.split(" ");
+			    	//dispose();
+			    	wert = Integer.valueOf(arr[1]);
+			    	return wert;
+			    }
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+		
+		return -1;
 	}
 	
 	private void schiesseSingleplayer(int posx, int posy) {
@@ -326,12 +644,15 @@ public class Guishot extends JFrame {
 		    			btnSchiessen.setEnabled(false);
 		    			while(schiesse == false)
 		    			{
+		    				
+		    				
 		    				eigenePunkte = spieler.getFeldpunkte();
 			    			lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
 			    			repaint();
 			    			if(!Ki.schiesse(spieler, gegner2))
 			    				schiesse = true;
 		    			}
+		    			zeichneFeldNeu();
 		    			//do {
 		    				
 			    			
@@ -389,8 +710,8 @@ public class Guishot extends JFrame {
 					e.printStackTrace();
 				}
 				
-				while(true)//warte auf antwort
-				{
+				//while(true)//warte auf antwort
+				//{
 					try {
 						String line = in.readLine();
 					    System.out.println(line);
@@ -428,8 +749,8 @@ public class Guishot extends JFrame {
 				    			}*/
 				    			
 				    			btnSchiessen.setBackground(Color.white);
-				    			repaint();
-				    			break;
+				    			//repaint();
+				    			//break;
 					    	}
 					    	else
 					    	{
@@ -465,7 +786,7 @@ public class Guishot extends JFrame {
 						    		      }
 					    			}
 					    				
-					    			repaint();
+					    			//repaint();
 					    			lblGegnerpunkte.setText("Gegnerpunkte: " + gegnerischepunkte);
 					    			if(gegnerischepunkte <=0)
 					    			{
@@ -473,7 +794,7 @@ public class Guishot extends JFrame {
 					    				JOptionPane.showMessageDialog(null, "Gewonnen!");
 					    				System.exit(0);
 					    			}
-					    			break;
+					    			//break;
 					    		}
 					    	}
 					    }
@@ -481,11 +802,16 @@ public class Guishot extends JFrame {
 					}catch (IOException e) {
 						e.printStackTrace();
 					}
-				}
+				//}
+				zeichneFeldNeu();
+				//update(this.getGraphics());
+				//repaint();
+				while(schiesse == false)
+					waitforShot();
 				
 			}
 		}
-		else
+		/*else
 		{
 			
 			while(true) //Warte auf schuss
@@ -514,6 +840,7 @@ public class Guishot extends JFrame {
 				    	if(wert == 0)
 				    	{
 				    		schiesse = true;
+				    		break;
 				    	}
 				    	else
 				    	{
@@ -531,14 +858,79 @@ public class Guishot extends JFrame {
 			    			
 				    	}
 				    	repaint();
-				    	break;
+				    	//break;
 				    }
 				    
 				}catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-		}
+		}*/
+		repaint();
+	}
+	
+	private void zeichneFeldNeu()
+	{
+		repaint();
+		revalidate();
+		update(this.getGraphics());
+	}
+	
+	public void waitforShot()
+	{
+		//while(true) //Warte auf schuss
+		//{
+			try {
+				String line = in.readLine();
+			    System.out.println(line);
+			    
+			    if (line.contains("Schuss"))
+			    {
+			    	String[] arr = line.split(" ");
+			    	String[] pos = arr[1].split(",");
+			    	int positx = Integer.valueOf(pos[0]);
+			    	int posity = Integer.valueOf(pos[1]);
+			    	
+			    	int wert = spieler.schiessen(positx, posity);
+			    	
+			    	
+			    	try {
+						out.write(String.format("%s%n", "Antwort " + wert));
+					    out.flush();
+					}catch (IOException e) {
+						e.printStackTrace();
+					}
+			    	
+			    	if(wert == 0)
+			    	{
+			    		schiesse = true;
+			    		JOptionPane.showMessageDialog(null, "Gegner hat geschossen, du bist an der Reihe!");
+			    		//break;
+			    	}
+			    	else
+			    	{
+			    		eigenePunkte = spieler.getFeldpunkte();
+		    			lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
+		    			
+		    			repaint();
+		    			
+		    			if(eigenePunkte == 0)
+		    			{
+		    				//spieler hat verloren
+		    				JOptionPane.showMessageDialog(null, "Verloren!");
+		    				System.exit(0);
+		    			}
+		    			
+			    	}
+			    	//repaint();
+			    	zeichneFeldNeu();
+			    	//break;
+			    }
+			    
+			}catch (IOException e) {
+				e.printStackTrace();
+			}
+		//}
 	}
 	
 	public void paint(Graphics g){ 
