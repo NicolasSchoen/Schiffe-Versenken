@@ -5,11 +5,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -177,6 +180,57 @@ public class Guijoin extends JFrame {
 					    	String[] arr = line.split(" ");
 					    	dispose();
 					    	new Guiplace(Integer.valueOf(arr[1]), 3, s, false);
+					    }
+					    
+					    if(line.contains("Laden")) {
+					    	String[] arr = line.split(" ");
+					    	System.out.println("ladenxxx");
+					    	JOptionPane.showMessageDialog(null, "Laden von: " + arr[1]);
+					    	
+					    	JFileChooser fc = new JFileChooser();
+							BufferedReader reader;
+							String spielstand;
+					        StringBuilder sb = new StringBuilder();
+							
+							
+							
+							int rueckgabeWert = fc.showOpenDialog(null);
+							
+							System.out.println(rueckgabeWert);
+					        
+					        /* Abfrage, ob auf "Öffnen" geklickt wurde */
+					        if(rueckgabeWert == JFileChooser.APPROVE_OPTION)
+					        {
+					             // Ausgabe der ausgewaehlten Datei
+					            System.out.println("Die zu öffnende Datei ist: " +
+					                  fc.getSelectedFile().getName());
+					            
+					            
+					            try {
+					                reader = new BufferedReader(new FileReader(fc.getSelectedFile()));
+					                String lne = reader.readLine();
+					                while(lne != null) {
+					                    sb.append(lne);
+					                    sb.append(System.lineSeparator());
+					                    lne = reader.readLine();
+					                }
+					                spielstand = sb.toString();
+					                Spielstand game = new Spielstand(spielstand);
+					                
+					                dispose();
+					                new Guishot(game, s);
+					                
+					            } 
+					            catch (FileNotFoundException e1) {
+					                e1.printStackTrace();
+					            }
+					            catch (IOException e1) {
+					                e1.printStackTrace();
+					            }
+					            
+					            
+					        }
+					    	
 					    }
 					    
 					}catch (IOException e) {

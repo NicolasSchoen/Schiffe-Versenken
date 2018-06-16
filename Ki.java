@@ -15,6 +15,14 @@ public class Ki {
 		
 	static int tref2x;
 	static int tref2y;
+	
+	public static void setztePunkte(int p) {
+		punkte = p;
+	}
+	
+	public static int getPunkte() {
+		return punkte;
+	}
 
 	public static boolean alleSchiffeSetzen(Feld f)
 	{
@@ -43,6 +51,17 @@ public class Ki {
 				schiffg = 2;
 			if(fpunkte == 4)
 				schiffg = (rand.nextInt(2) + 1) * 2;
+			if(fpunkte == 5)
+				if(schiffg == 4)
+				{
+					schiffg = (rand.nextInt(3) + 2);
+					if(schiffg == 4)
+						schiffg = 5;
+				}
+					
+			if(fpunkte == 6 && schiffg == 5)
+				schiffg = (rand.nextInt(3) + 2);
+				
 			if(!f.schiffPlatzieren(posx, posy, schiffg, richtung))
 				fehler++;
 			else

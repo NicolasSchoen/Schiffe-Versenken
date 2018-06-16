@@ -12,6 +12,10 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 
@@ -40,7 +44,15 @@ public class Gui extends javax.swing.JFrame{
 		btnSpielLaden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {		//Spiel laden button
 				JFileChooser fc = new JFileChooser();
+				BufferedReader reader;
+				String spielstand;
+		        StringBuilder sb = new StringBuilder();
+				
+				
+				
 				int rueckgabeWert = fc.showOpenDialog(null);
+				
+				System.out.println(rueckgabeWert);
 		        
 		        /* Abfrage, ob auf "Öffnen" geklickt wurde */
 		        if(rueckgabeWert == JFileChooser.APPROVE_OPTION)
@@ -48,6 +60,36 @@ public class Gui extends javax.swing.JFrame{
 		             // Ausgabe der ausgewaehlten Datei
 		            System.out.println("Die zu öffnende Datei ist: " +
 		                  fc.getSelectedFile().getName());
+		            
+		            
+		            try {
+		                reader = new BufferedReader(new FileReader(fc.getSelectedFile()));
+		                String line = reader.readLine();
+		                while(line != null) {
+		                    sb.append(line);
+		                    sb.append(System.lineSeparator());
+		                    line = reader.readLine();
+		                }
+		                spielstand = sb.toString();
+		                Spielstand game = new Spielstand(spielstand);
+		                
+		                if(game.modus == 2) {
+		                	dispose();
+		                	new Guishot(game);
+		                }
+		                else {
+		                	dispose();
+		                	new Guiserver(game, fc.getSelectedFile().getName());
+		                }
+		            } 
+		            catch (FileNotFoundException e1) {
+		                e1.printStackTrace();
+		            }
+		            catch (IOException e1) {
+		                e1.printStackTrace();
+		            }
+		            
+		            
 		        }
 			}
 		});

@@ -9,6 +9,7 @@ import java.awt.Point;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import sun.applet.Main;
 
@@ -27,8 +28,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
@@ -134,7 +137,7 @@ public class Guishot extends JFrame {
 		gegner2.gegnerInitialisieren();
 		
 		this.setTitle("Schiffe versenken schiessen");
-		this.setSize(1500, 620);
+		this.setSize(1000, 620);
 		this.setResizable(false);
 		this.setLocation(50, 50);
 		getContentPane().setLayout(null);
@@ -143,13 +146,15 @@ public class Guishot extends JFrame {
 		btnBeenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {		//beenden button
 				
-				try {
-					s.close();
-				} catch (IOException ex) {
-					// TODO Auto-generated catch block
-					ex.printStackTrace();
+				if(multiplayer)
+				{
+					try {
+						s.close();
+					} catch (IOException ex) {
+						// TODO Auto-generated catch block
+						ex.printStackTrace();
+					}
 				}
-				
 				System.exit(0);
 			}
 		});
@@ -160,30 +165,57 @@ public class Guishot extends JFrame {
 		btnSpeichernBeenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {		//speichern und beenden button
 				
-				int anreihe;
-				if(schiesse)
-				{
-					anreihe = 1;
-				}
-				else
-				{
-					anreihe = 0;
-				}
 				
-				Spielstand spielstand = new Spielstand(spieler, spieler2, gegner, gegner2, modus, anreihe);
+				
+				Spielstand spielstand = new Spielstand(spieler, spieler2, gegner, gegner2, modus, schiesse, eigenePunkte, gegnerischepunkte);
 				
 				
 				////speichern
-				JFileChooser fc = new JFileChooser();
-				fc.showSaveDialog(null);
+				JFileChooser fileChooser1 = new JFileChooser();
+
+				
+                String saveText = spielstand.toString();
+                int saveTextLength = saveText.length();
+                int beginTxt = 0;
+                int returnVal = fileChooser1.showSaveDialog(null);
+                fileChooser1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                String filname = "";
+
+                if (returnVal == JFileChooser.APPROVE_OPTION)
+                {
+                   File saveFile = fileChooser1.getSelectedFile();
+                   filname = saveFile.getName();
+                   BufferedWriter datWrite;
+                try {
+                    datWrite = new BufferedWriter(new FileWriter(saveFile));
+                    datWrite.write(saveText, beginTxt, (saveTextLength));
+                    datWrite.flush();
+                    datWrite.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();;
+                }
+                }
 				
 				////
-				try {
-					s.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if(multiplayer)
+				{
+					
+					try {
+						out.write(String.format("%s%n", "Speichern " + filname));
+					    out.flush();
+					}catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					
+					try {
+						s.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
+				
 				System.exit(0);
 			}
 		});
@@ -229,6 +261,74 @@ public class Guishot extends JFrame {
 		this.setVisible(true);
 	}
 	
+	public Guishot(Spielstand game) {			//lade-konstruktor
+		this(game.spieler1, game.modus);
+		spieler = game.spieler1;
+		spieler2 = game.spieler2;
+		gegner = game.gegner1;
+		gegner2 = game.gegner2;
+		schiesse = game.anreihe;
+		eigenePunkte = game.eigenepunkte;
+		gegnerischepunkte = game.gegnerischepunkte;
+		Ki.setztePunkte(eigenePunkte);
+		lblGegnerpunkte.setText("Gegnerpunkte: " + gegnerischepunkte);
+		lblEigenePunkte.setText("eigene Punkte: " + eigenePunkte);
+		zeichneFeldNeu();
+		
+		if(modus == 1) {
+			while(schiesse == false)
+				waitforShot();
+		}
+		else
+		{
+			if(modus == 3) {
+				schiesseKIMult();
+			}
+		}
+	}
+	
+	public Guishot(Spielstand game, Socket s) {			//lade-konstruktor
+		this(game.spieler1, game.modus);
+		spieler = game.spieler1;
+		spieler2 = game.spieler2;
+		gegner = game.gegner1;
+		gegner2 = game.gegner2;
+		schiesse = game.anreihe;
+		eigenePunkte = game.eigenepunkte;
+		gegnerischepunkte = game.gegnerischepunkte;
+		Ki.setztePunkte(eigenePunkte);
+		lblGegnerpunkte.setText("Gegnerpunkte: " + gegnerischepunkte);
+		lblEigenePunkte.setText("eigene Punkte: " + eigenePunkte);
+		
+		multiplayer = true;
+		this.s = s;
+		try {
+			// Ein- und Ausgabestrom des Sockets ermitteln
+			// und als BufferedReader bzw. Writer verpacken
+			// (damit man zeilen- bzw. zeichenweise statt byteweise arbeiten kann).
+			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			out = new OutputStreamWriter(s.getOutputStream());
+			
+			// Standardeingabestrom ebenfalls als BufferedReader verpacken.
+			usr = new BufferedReader(new InputStreamReader(System.in));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		zeichneFeldNeu();
+		
+		if(modus == 1) {
+			while(schiesse == false)
+				waitforShot();
+		}
+		else
+		{
+			if(modus == 3) {
+				schiesseKIMult();
+			}
+		}
+	}
+	
 	public Guishot(Feld f, int m, Socket s, boolean reihe) {
 		this(f,m);
 		multiplayer = true;
@@ -247,6 +347,7 @@ public class Guishot extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		
 		if(modus == 1) {
 			while(schiesse == false)
@@ -646,11 +747,13 @@ public class Guishot extends JFrame {
 		    			{
 		    				
 		    				
-		    				eigenePunkte = spieler.getFeldpunkte();
+		    				
 			    			lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
 			    			repaint();
 			    			if(!Ki.schiesse(spieler, gegner2))
 			    				schiesse = true;
+			    			else
+			    				eigenePunkte--;
 		    			}
 		    			zeichneFeldNeu();
 		    			//do {
@@ -806,6 +909,7 @@ public class Guishot extends JFrame {
 				zeichneFeldNeu();
 				//update(this.getGraphics());
 				//repaint();
+				
 				while(schiesse == false)
 					waitforShot();
 				
@@ -880,6 +984,8 @@ public class Guishot extends JFrame {
 	{
 		//while(true) //Warte auf schuss
 		//{
+		btnSchiessen.setText("Gegner dran");
+		zeichneFeldNeu();
 			try {
 				String line = in.readLine();
 			    System.out.println(line);
@@ -904,12 +1010,13 @@ public class Guishot extends JFrame {
 			    	if(wert == 0)
 			    	{
 			    		schiesse = true;
+			    		btnSchiessen.setText("Schiessen");
 			    		JOptionPane.showMessageDialog(null, "Gegner hat geschossen, du bist an der Reihe!");
 			    		//break;
 			    	}
 			    	else
 			    	{
-			    		eigenePunkte = spieler.getFeldpunkte();
+			    		eigenePunkte--;
 		    			lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
 		    			
 		    			repaint();
@@ -925,6 +1032,53 @@ public class Guishot extends JFrame {
 			    	//repaint();
 			    	zeichneFeldNeu();
 			    	//break;
+			    }
+			    if(line.contains("Speichern")) {
+			    	String[] arr = line.split(" ");
+			    	String filenameget = arr[1];
+			    	
+			    	JOptionPane.showMessageDialog(null, "Speichern unter name: " + filenameget);
+			    	
+			    	
+			    	Spielstand spielstand = new Spielstand(spieler, spieler2, gegner, gegner2, modus, schiesse, eigenePunkte, gegnerischepunkte);
+					
+					
+					////speichern
+					JFileChooser fileChooser1 = new JFileChooser();
+
+					
+	                String saveText = spielstand.toString();
+	                int saveTextLength = saveText.length();
+	                int beginTxt = 0;
+	                int returnVal = fileChooser1.showSaveDialog(null);
+	                fileChooser1.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+	                if (returnVal == JFileChooser.APPROVE_OPTION)
+	                {
+	                   File saveFile = fileChooser1.getSelectedFile();
+	                   BufferedWriter datWrite;
+	                try {
+	                    datWrite = new BufferedWriter(new FileWriter(saveFile));
+	                    datWrite.write(saveText, beginTxt, (saveTextLength));
+	                    datWrite.flush();
+	                    datWrite.close();
+	                } catch (IOException ex) {
+	                    ex.printStackTrace();;
+	                }
+	                }
+					
+					////
+					if(multiplayer)
+					{	
+						try {
+							s.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					
+					System.exit(0);
 			    }
 			    
 			}catch (IOException e) {
@@ -988,7 +1142,7 @@ public class Guishot extends JFrame {
 		
 		//gegnerische Sicht:
 		
-				for(int i=0; i<fgroesse; i++)					//j=posX;  i=posY
+				/*for(int i=0; i<fgroesse; i++)					//j=posX;  i=posY
 				{
 					for(int j=0; j<fgroesse; j++)
 					{
@@ -1007,6 +1161,6 @@ public class Guishot extends JFrame {
 						
 					}
 						
-				}
+				}*/
     } 
 }

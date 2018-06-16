@@ -22,6 +22,9 @@ public class Guiserver extends JFrame {
 	private int feldgroesse;
 	private int modus;
 	private int port=12345;
+	private boolean laden = false;
+	private String fn="";
+	private Spielstand game;
 
 	/**
 	 * Launch the application.
@@ -111,15 +114,29 @@ public class Guiserver extends JFrame {
 				lblStatusMitspielerNicht.setText("Status: Spieler beigetreten");
 				
 				
-				try {
-					out.write(String.format("%s%n", "Feld " + feldgroesse));
-				    out.flush();
-				}catch (IOException e) {
-					e.printStackTrace();
+				if(laden) {
+					try {
+						out.write("Laden " + fn + " ");
+					    out.flush();
+					}catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					dispose();
+					new Guishot(game);
+				}
+				else {
+					try {
+						out.write(String.format("%s%n", "Feld " + feldgroesse));
+					    out.flush();
+					}catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					dispose();
+					new Guiplace(feldgroesse, modus, s, true);
 				}
 				
-				dispose();
-				new Guiplace(feldgroesse, modus, s, true);
 				
 					
 					
@@ -147,5 +164,12 @@ public class Guiserver extends JFrame {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public Guiserver(Spielstand game, String filename) {
+		this(game.spieler1.getGroesse(), game.modus);
+		this.game = game;
+		laden = true;
+		fn = filename;
 	}
 }
