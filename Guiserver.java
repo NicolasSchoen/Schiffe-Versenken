@@ -53,6 +53,9 @@ public class Guiserver extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * 
+	 * @param g Feldgroesse
+	 * @param m Modus
 	 */
 	public Guiserver(int g, int m) {
 		/*setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -175,6 +178,14 @@ public class Guiserver extends JFrame {
 		
 	}
 	
+	
+	/**
+     * Alternativer Konstruktor
+     * wird aufgerufen, wenn der Spieler ein Spiel laedt, welches zuvor im Multiplayer abgespeichert wurde.
+     *
+     * @param game uebergebener Spielstand
+     * @param filename uebergebener Dateiname
+     */
 	public Guiserver(Spielstand game, String filename) {
 		this(game.spieler1.getGroesse(), game.modus);
 		this.game = game;

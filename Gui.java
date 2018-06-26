@@ -29,9 +29,9 @@ import java.awt.Font;
 
 public class Gui extends javax.swing.JFrame{
 	/**
-     * 
-     *
-     * 
+     * Initialisiert die Haupt-Gui-Klasse.
+     * in diesem Fenster kann der Spieler auswaehlen, ob er ein neues Spiel starten,
+     * ein Spiel laden, oder ob er einem Spiel beitreten will.
      */
 	
 	
@@ -126,6 +126,12 @@ public class Gui extends javax.swing.JFrame{
 		lblSchiffeVersenken.setBounds(116, 11, 225, 29);
 		getContentPane().add(lblSchiffeVersenken);
 	}
+	
+	
+	/**
+     * Main-Funktion, sorgt für den Start des Programms
+     * @param args uebergabeparameter beim Programmaufruf
+     */
 	
 	public static void main(String[] args) {
 	    // TODO code application logic here

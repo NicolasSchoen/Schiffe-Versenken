@@ -93,8 +93,9 @@ public class Guishot extends JFrame {
 	}*/
 
 	/**
-	 * Create the frame.
-	 * @wbp.parser.constructor
+	 * Konstruktor, wird aufgerufen, wenn Spiel im Singleplayer gestartet
+	 * @param f uebergebenes Feld des Spielers
+	 * @param m Modus
 	 */
 	public Guishot(Feld f, int m) {
 		
@@ -274,6 +275,15 @@ public class Guishot extends JFrame {
 		this.setVisible(true);
 	}
 	
+	
+	
+	
+	/**
+     * Alternativer Konstruktor, wird aufgerufen, wenn Spiel im Singleplayer geladen
+     *
+     * @param game Spielstand
+     */
+	
 	public Guishot(Spielstand game) {			//lade-konstruktor
 		this(game.spieler1, game.modus);
 		spieler = game.spieler1;
@@ -299,6 +309,16 @@ public class Guishot extends JFrame {
 			}
 		}
 	}
+	
+	
+	
+	
+	/**
+     * Alternativer Konstruktor, wird aufgerufen, wenn Spiel im Multiplayer geladen
+     *
+     * @param game Spielstand
+     * @param s Socket
+     */
 	
 	public Guishot(Spielstand game, Socket s) {			//lade-konstruktor
 		this(game.spieler1, game.modus);
@@ -342,6 +362,17 @@ public class Guishot extends JFrame {
 		}
 	}
 	
+	
+	
+	/**
+     * Alternativer Konstruktor, wird aufgerufen, wenn Spiel im Multiplayer gestartet
+     *
+     * @param f Spielfeld des Spielers
+     * @param m Modus
+     * @param s Socket
+     * @param reihe Zeigt an, ob Spieler an Reihe(Wenn Spieler Spiel erstellt, ist er an der Reihe, sonst der Gegner)
+     */
+	
 	public Guishot(Feld f, int m, Socket s, boolean reihe) {
 		this(f,m);
 		multiplayer = true;
@@ -377,6 +408,12 @@ public class Guishot extends JFrame {
 		
 	}
 	
+	
+	
+	/**
+     * Hilfsfunktion, wird aufgerufen, wenn Multiplayer als KI gestartet wurde
+     *
+     */
 	private void schiesseKIMult() {
 		int punkte = 0;
 		boolean oben=false;
@@ -654,6 +691,10 @@ public class Guishot extends JFrame {
 
 	}
 	
+	
+	/**
+     * Hilfsfunktion, wird von der KI im Multiplayer zum schiessen aufgerufen
+     */
 	private int multShot(int x, int y) {
 		
 		int wert;
@@ -684,6 +725,10 @@ public class Guishot extends JFrame {
 		return -1;
 	}
 	
+	
+	/**
+     * Hilfsfunktion, wird im Singleplayer aufgerufen, wenn der Spieler gegen KI spielt und per Mausklick geschossen hat.
+     */
 	private void schiesseSingleplayer(int posx, int posy) {
 		if(schiesse == true)
 	    {
@@ -814,6 +859,12 @@ public class Guishot extends JFrame {
 	    }
 	}
 	
+	
+	/**
+     * Hilfsfunktion, wird im Multiplayer aufgerufen, wenn der Spieler selbst spielt und per Mausklick geschossen hat.
+     * @param posx Position X
+     * @param posy Position Y
+     */
 	private void schiesseMultiplayer(int posx, int posy) {
 		if(schiesse) 
 		{
@@ -932,6 +983,10 @@ public class Guishot extends JFrame {
 		repaint();
 	}
 	
+	
+	/**
+     * Zeichnet Feld neu und erzwingt aktualisieren des Frames.
+     */
 	private void zeichneFeldNeu()
 	{
 		repaint();
@@ -939,6 +994,10 @@ public class Guishot extends JFrame {
 		update(this.getGraphics());
 	}
 	
+	
+	/**
+     * Hilfsfunktion, wartet auf einen schuss des Gegners im Multiplayer
+     */
 	public void waitforShot()
 	{
 		//while(true) //Warte auf schuss
@@ -1046,6 +1105,10 @@ public class Guishot extends JFrame {
 		//}
 	}
 	
+	
+	/**
+     * Zeichnet das eigene Feld und das Feld, in dem der Spieler schiesst.
+     */
 	public void paint(Graphics g){ 
 		super.paint(g);
 		int feldgroesse = 400;			//breite des gezeichneten Feldes

@@ -87,6 +87,9 @@ public class Guiplace extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * 
+	 * @param g Feldgroesse
+	 * @param m Modus
 	 */
 	public Guiplace(int g, int m) {
 		getContentPane().addMouseListener(new MouseAdapter() {
@@ -323,6 +326,17 @@ public class Guiplace extends JFrame {
 		this.setVisible(true);
 	}
 	
+	
+	
+	/**
+	 * Alternativer Konstruktor fuer Multiplayer
+     *
+     * @param g übergebene Feldgröße
+     * @param m Modus
+     * @param s Socket
+     * @param reihe Zeigt, Ob Spieler an Reihe ist
+     */
+	
 	public Guiplace(int g, int m, Socket s, boolean reihe) {
 		this(g,m);
 		this.s = s;
@@ -341,6 +355,12 @@ public class Guiplace extends JFrame {
 		}
 	}
 	
+	
+	/**
+     * gibt den Richtungsnamen zurück
+     *@return Name der Richtung fuer Menschen lesbar
+     */
+	
 	private String getRichtungName()
 	{
 		switch(richtung)
@@ -353,6 +373,12 @@ public class Guiplace extends JFrame {
 		return "";
 	}
 	
+	
+	/**
+     * Zeichnet das Spielfeld auf dem Bildschirm
+     *
+     * @param g Zeichenobjekt
+     */
 	
 	public void paint(Graphics g){ 
 		super.paint(g);
