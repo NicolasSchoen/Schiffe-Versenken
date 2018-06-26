@@ -25,6 +25,16 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.Socket;
 
+
+/**
+ * Hier kann man die Schiffe platzieren. Möglich ist eine automatische,
+ * zufällige Platzierung oder eine Platzierung per Hand, indem man die Schiffe und die Richtung auswählt
+ * und dann das Feld an der Stelle anklickt, an der man das Schiff platzieren möchte.
+ *
+ * @author Nicolas Schoen
+ * @version 1.0
+ */
+
 public class Guiplace extends JFrame {
 
 	private JPanel contentPane;

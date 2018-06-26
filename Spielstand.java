@@ -1,5 +1,14 @@
 import java.io.Serializable;
 
+/**
+ * Hilfsklasse, wird zum Speichern und Laden benötigt,
+ * beinhaltet alle abgespeicherten Werte wie Felder, Punkte
+ * und wer gerade an der Reihe ist.
+ *
+ * @author Nicolas Schoen
+ * @version 1.0
+ */
+
 public class Spielstand implements Serializable {
 	public Feld spieler1;
 	public Feld spieler2;
@@ -10,6 +19,19 @@ public class Spielstand implements Serializable {
 	public int gegnerischepunkte;
 	public boolean anreihe;
 	
+	
+	/**
+     * Konstruktor.
+     *
+     * @param s1 Feld Spieler 1
+     * @param s2 Feld Spieler 2 (für Singleplayer)
+     * @param g1 Feld Gegner 1
+     * @param g2 Feld Gegner 2 (für Singleplayer)
+     * @param m	Spielmodus(1=Multiplayer Spieler, 2=Singleplayer, 3=Multiplayer KI)
+     * @param anreihe wer gerade an der Reihe ist
+     * @param ep eigene Punkte
+     * @param gp gegnerische Punkte
+     */
 	public Spielstand(Feld s1, Feld s2, Feld g1, Feld g2, int m, boolean anreihe, int ep, int gp){
 		this.spieler1 = s1;
 		this.spieler2 = s2;
@@ -21,6 +43,13 @@ public class Spielstand implements Serializable {
 		this.gegnerischepunkte = gp;
 	}
 	
+	
+	/**
+     * Konstruktor, durchsucht den String und erstellt anhand der darin enthaltenen Informationen
+     * wieder Felder und sonstige relevante Werte.
+     *
+     * @param s enthält alle Informationen durch Trennzeichen getrennt
+     */
 	public Spielstand(String s) {
 		String[] arr = s.split(" ");
     	modus = Integer.parseInt(arr[0]);
@@ -64,6 +93,12 @@ public class Spielstand implements Serializable {
     		}
 	}
 	
+	
+	/**
+     * Hängt sämtliche relevanten Werte an einen String
+     *
+     * @return String, welcher sich zum Speichern in Textdatei eignet
+     */
 	public String toString() {
 		String ausgabe = "";
 		

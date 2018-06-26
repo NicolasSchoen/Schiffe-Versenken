@@ -1,6 +1,13 @@
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * KI, Klasse beinhaltet statische Methoden, welche von der Ki verwendet werden.
+ *
+ * @author Nicolas Schoen
+ * @version 1.0
+ */
+
 public class Ki {
 	
 	static int punkte = 0;
@@ -16,14 +23,34 @@ public class Ki {
 	static int tref2x;
 	static int tref2y;
 	
-	public static void setztePunkte(int p) {
-		punkte = p;
+	
+	/**
+     * setzt eigene Punkte.
+     *
+     *@param p übergebene Punkte
+     * @param g übergebene Feldgröße
+     */
+	public static void setztePunkte(int p, int g) {
+		punkte = (int)(g * g * 0.3) - p;
 	}
 	
+	
+	/**
+     * Gibt eigene Punkte zurück.
+     *
+     * @return eigene Punkte
+     */
 	public static int getPunkte() {
 		return punkte;
 	}
 
+	
+	/**
+     * setzt auf Feld f alle Schiffe zufällig.
+     *
+     * @param f Feld, auf dem die Schiffe platziert werden
+     * @return true, wenn möglich, sonst false
+     */
 	public static boolean alleSchiffeSetzen(Feld f)
 	{
 		int fpunkte = f.getFeldpunkte();
@@ -86,6 +113,15 @@ public class Ki {
 		return false;
 	}
 	
+	
+	/**
+     * Schiesst zufällig im Feld. Wenn vorher ein Schiff getroffen wurde, versucht KI an der Position
+     * des letzten Treffers zu schiessen.
+     *
+     * @param s gegnerisches Feld zum schiessen
+     * @param f2 Feld, welches KI sieht
+     * @return true, wenn Schiff getroffen, false, wenn Wasser getroffen
+     */
 	public static boolean schiesse(Feld s, Feld f2)
 	{
 		
@@ -93,6 +129,7 @@ public class Ki {
 		
 		
 		System.out.println("trefa = " + trefa);
+		System.out.println("punkte = " + punkte);
 		
 		Random rand = new Random();
 		int posx = rand.nextInt(f2.getGroesse());

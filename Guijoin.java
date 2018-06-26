@@ -20,6 +20,15 @@ import java.io.Writer;
 import java.awt.event.ActionEvent;
 import java.net.*;
 
+/**
+ * Hier kann man einem Spiel anhand der IP-Adresse
+ * und dem Port beitreten
+ *
+ * @author Nicolas Schoen
+ * @version 1.0
+ */
+
+
 public class Guijoin extends JFrame {
 
 	private JPanel contentPane;
@@ -112,6 +121,56 @@ public class Guijoin extends JFrame {
 					    	String[] arr = line.split(" ");
 					    	dispose();
 					    	new Guiplace(Integer.valueOf(arr[1]), 1, s, false);
+					    }
+					    if(line.contains("Laden")) {
+					    	String[] arr = line.split(" ");
+					    	System.out.println("ladenxxx");
+					    	JOptionPane.showMessageDialog(null, "Laden von: " + arr[1]);
+					    	
+					    	JFileChooser fc = new JFileChooser();
+							BufferedReader reader;
+							String spielstand;
+					        StringBuilder sb = new StringBuilder();
+							
+							
+							
+							int rueckgabeWert = fc.showOpenDialog(null);
+							
+							System.out.println(rueckgabeWert);
+					        
+					        /* Abfrage, ob auf "Öffnen" geklickt wurde */
+					        if(rueckgabeWert == JFileChooser.APPROVE_OPTION)
+					        {
+					             // Ausgabe der ausgewaehlten Datei
+					            System.out.println("Die zu öffnende Datei ist: " +
+					                  fc.getSelectedFile().getName());
+					            
+					            
+					            try {
+					                reader = new BufferedReader(new FileReader(fc.getSelectedFile()));
+					                String lne = reader.readLine();
+					                while(lne != null) {
+					                    sb.append(lne);
+					                    sb.append(System.lineSeparator());
+					                    lne = reader.readLine();
+					                }
+					                spielstand = sb.toString();
+					                Spielstand game = new Spielstand(spielstand);
+					                
+					                dispose();
+					                new Guishot(game, s);
+					                
+					            } 
+					            catch (FileNotFoundException e1) {
+					                e1.printStackTrace();
+					            }
+					            catch (IOException e1) {
+					                e1.printStackTrace();
+					            }
+					            
+					            
+					        }
+					    	
 					    }
 					    
 					}catch (IOException e) {

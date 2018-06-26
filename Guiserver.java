@@ -13,6 +13,15 @@ import java.awt.event.ActionEvent;
 import java.net.*;
 import java.io.*;
 
+
+/**
+ * Hier kann man einen Server starten, wobei man den verwendeten Port selbst bestimmen kann.
+ *
+ * @author Nicolas Schoen
+ * @version 1.0
+ */
+
+
 public class Guiserver extends JFrame {
 
 	private JPanel contentPane;
@@ -123,7 +132,7 @@ public class Guiserver extends JFrame {
 					}
 					
 					dispose();
-					new Guishot(game);
+					new Guishot(game, s);
 				}
 				else {
 					try {

@@ -11,6 +11,18 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+
+/**
+ * Wenn ein neues Spiel gestartet wurde, kann man hier auswählen,
+ * ob man Ein Spiel lokal gegen den Computer spielen möchte,
+ * oder ob man ein Spiel hosten möchte, wobei man noch unterscheiden kann,
+ * ob der gehostete Spieler selbst spielt oder die KI für sich spielen lässt.
+ *
+ * @author Nicolas Schoen
+ * @version 1.0
+ */
+
+
 public class Guisetmode extends JFrame {
 
 	private JPanel contentPane;

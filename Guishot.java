@@ -43,6 +43,18 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 
+
+/**
+ * Hier kann man schiessen, indem man auf das gewünschte Feld klickt.
+ * der Button unten symbolisiert, wer gerade an der Reihe ist.
+ * Beim Multiplayer wird zusätzlich, nachdem der Gegner mit seinen Schüssen fertig ist,
+ * eine Meldung angezeigt, damit der Spieler weiss, dass er jetzt wieder an der Reihe ist
+ * und nicht unnötig lange wartet.
+ *
+ * @author Nicolas Schoen
+ * @version 1.0
+ */
+
 public class Guishot extends JFrame {
 
 	private JPanel contentPane;
@@ -82,6 +94,7 @@ public class Guishot extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @wbp.parser.constructor
 	 */
 	public Guishot(Feld f, int m) {
 		
@@ -270,7 +283,7 @@ public class Guishot extends JFrame {
 		schiesse = game.anreihe;
 		eigenePunkte = game.eigenepunkte;
 		gegnerischepunkte = game.gegnerischepunkte;
-		Ki.setztePunkte(eigenePunkte);
+		Ki.setztePunkte(eigenePunkte, spieler.getGroesse());
 		lblGegnerpunkte.setText("Gegnerpunkte: " + gegnerischepunkte);
 		lblEigenePunkte.setText("eigene Punkte: " + eigenePunkte);
 		zeichneFeldNeu();
@@ -296,7 +309,7 @@ public class Guishot extends JFrame {
 		schiesse = game.anreihe;
 		eigenePunkte = game.eigenepunkte;
 		gegnerischepunkte = game.gegnerischepunkte;
-		Ki.setztePunkte(eigenePunkte);
+		Ki.setztePunkte(eigenePunkte, spieler.getGroesse());
 		lblGegnerpunkte.setText("Gegnerpunkte: " + gegnerischepunkte);
 		lblEigenePunkte.setText("eigene Punkte: " + eigenePunkte);
 		
@@ -631,6 +644,7 @@ public class Guishot extends JFrame {
 				}
 				
 			}
+			lblGegnerpunkte.setText("Gegnerpunkte: " + punkte);
 			zeichneFeldNeu();
 			
 			while(schiesse == false)
@@ -695,7 +709,7 @@ public class Guishot extends JFrame {
 		    				try {
 			    		        Clip clip = AudioSystem.getClip();
 			    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-			    		          Main.class.getResourceAsStream("/media/explosion.wav"));
+			    		          Main.class.getResource("/media/explosion.wav"));
 			    		        clip.open(inputStream);
 			    		        clip.start(); 
 			    		      } catch (Exception e) {
@@ -707,7 +721,7 @@ public class Guishot extends JFrame {
 		    				try {
 			    		        Clip clip = AudioSystem.getClip();
 			    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-			    		          Main.class.getResourceAsStream("/media/treffer.wav"));
+			    		          Main.class.getResource("/media/treffer.wav"));
 			    		        clip.open(inputStream);
 			    		        clip.start(); 
 			    		      } catch (Exception e) {
@@ -732,7 +746,7 @@ public class Guishot extends JFrame {
 		    			try {
 		    		        Clip clip = AudioSystem.getClip();
 		    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-		    		          Main.class.getResourceAsStream("/media/wasser.wav"));
+		    		          Main.class.getResource("/media/wasser.wav"));
 		    		        clip.open(inputStream);
 		    		        clip.start(); 
 		    		      } catch (Exception e) {
@@ -832,7 +846,7 @@ public class Guishot extends JFrame {
 				    			try {
 				    		        Clip clip = AudioSystem.getClip();
 				    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-				    		          Main.class.getResourceAsStream("/media/wasser.wav"));
+				    		          Main.class.getResource("/media/wasser.wav"));
 				    		        clip.open(inputStream);
 				    		        clip.start(); 
 				    		      } catch (Exception e) {
@@ -869,7 +883,7 @@ public class Guishot extends JFrame {
 					    				try {
 						    		        Clip clip = AudioSystem.getClip();
 						    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-						    		          Main.class.getResourceAsStream("/media/explosion.wav"));
+						    		          Main.class.getResource("/media/explosion.wav"));
 						    		        clip.open(inputStream);
 						    		        clip.start(); 
 						    		      } catch (Exception e) {
@@ -881,7 +895,7 @@ public class Guishot extends JFrame {
 					    				try {
 						    		        Clip clip = AudioSystem.getClip();
 						    		        AudioInputStream inputStream = AudioSystem.getAudioInputStream(
-						    		          Main.class.getResourceAsStream("/media/treffer.wav"));
+						    		          Main.class.getResource("/media/treffer.wav"));
 						    		        clip.open(inputStream);
 						    		        clip.start(); 
 						    		      } catch (Exception e) {
@@ -915,61 +929,6 @@ public class Guishot extends JFrame {
 				
 			}
 		}
-		/*else
-		{
-			
-			while(true) //Warte auf schuss
-			{
-				try {
-					String line = in.readLine();
-				    System.out.println(line);
-				    
-				    if (line.contains("Schuss"))
-				    {
-				    	String[] arr = line.split(" ");
-				    	String[] pos = arr[1].split(",");
-				    	int positx = Integer.valueOf(pos[0]);
-				    	int posity = Integer.valueOf(pos[1]);
-				    	
-				    	int wert = spieler.schiessen(positx, posity);
-				    	
-				    	
-				    	try {
-							out.write(String.format("%s%n", "Antwort " + wert));
-						    out.flush();
-						}catch (IOException e) {
-							e.printStackTrace();
-						}
-				    	
-				    	if(wert == 0)
-				    	{
-				    		schiesse = true;
-				    		break;
-				    	}
-				    	else
-				    	{
-				    		eigenePunkte = spieler.getFeldpunkte();
-			    			lblEigenePunkte.setText("eigene punkte: " + eigenePunkte);
-			    			
-			    			
-			    			
-			    			if(eigenePunkte == 0)
-			    			{
-			    				//spieler hat verloren
-			    				JOptionPane.showMessageDialog(null, "Verloren!");
-			    				System.exit(0);
-			    			}
-			    			
-				    	}
-				    	repaint();
-				    	//break;
-				    }
-				    
-				}catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}*/
 		repaint();
 	}
 	

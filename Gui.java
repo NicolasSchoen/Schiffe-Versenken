@@ -19,7 +19,22 @@ import java.io.IOException;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 
+/**
+ * Gui, gibt Auswahl an, ob man ein neues Spiel beginnen moechte,
+ * einen Spielstand laden oder einem Spiel beitreten
+ *
+ * @author Nicolas Schoen
+ * @version 1.0
+ */
+
 public class Gui extends javax.swing.JFrame{
+	/**
+     * 
+     *
+     * 
+     */
+	
+	
 	public Gui() {
 		getContentPane().setLayout(null);
 		

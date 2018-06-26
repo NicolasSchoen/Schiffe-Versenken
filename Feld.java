@@ -1,3 +1,12 @@
+/**
+ * Diese Klasse stellt das Spielfeld dar, hier werden alle relevanten
+ * Operationen des Spiels durchgeführt.
+ * Belegung: 0:Wasser,   1:Schiff,   2:getroffenes Schiff,    3:versenktes Schiff		4:unbekannt(bei gegner)
+ *
+ * @author Nicolas Schoen
+ * @version 1.0
+ */
+
 
 public class Feld {
 	
@@ -8,6 +17,13 @@ public class Feld {
 	private int x;
 	private int feld[][];
 	private int schiffsfelder, belegteSchiffsfelder;
+	
+	
+	/**
+     * Legt neues Feld der Größe g an.
+     *
+     * @param g übergebene Feldgröße
+     */
 	
 	public Feld(int g)
 	{
@@ -26,6 +42,12 @@ public class Feld {
 		
 	}
 	
+	
+	/**
+     * setzt alle Felder auf 0(Wasser).
+     *
+     */
+	
 	public void feldInitialisieren()
 	{
 		for(int i=0; i<x; i++)
@@ -36,6 +58,12 @@ public class Feld {
 			}
 		}
 	}
+	
+	
+	/**
+     * setzt alle Felder auf 4(Unbekannt).
+     *
+     */
 	public void gegnerInitialisieren()
 	{
 		for(int i=0; i<x; i++)
@@ -47,10 +75,21 @@ public class Feld {
 		}
 	}
 	
+	
+	/**
+     * Get-Methode der Feldgröße.
+     *@return Feldgröße
+     */
 	public int getGroesse() {
 		return x;
 	}
 	
+	
+	
+	/**
+     * Gibt Feld auf der Konsole aus.
+     *
+     */
 	public void feldAusgeben()
 	{
 		System.out.println("Feld: ");
@@ -65,6 +104,15 @@ public class Feld {
 		System.out.println("Schiffsfelder: " + schiffsfelder + " ,davon belegt: " + (schiffsfelder-belegteSchiffsfelder));
 	}
 	
+	
+	
+	/**
+     * Gibt den Inhalt des Feldes an der Stelle x,y aus.
+     *
+     * @param x Position X
+     * @param y Position Y
+     * @return Wert des Feldes an Position, wenn Position nicht gültig, -1
+     */
 	public int getFeldInhalt(int x, int y) 								//gibt Inhalt an feld x y zurueck
 	{
 		if(inFeld(x, y))
@@ -73,12 +121,31 @@ public class Feld {
 		
 	}
 	
+	
+	
+	/**
+     * Prüft, ob sich die Position im Feld befindet.
+     *
+     * @param x Position X
+     * @param y Position Y
+     * @return true, wenn Position in Feld, sonst false
+     */
 	public boolean inFeld(int x, int y) {
 		if(x >= 0 && x< this.x && y >= 0 && y < this.x)
 			return true;
 		return false;
 	}
 	
+	
+	/**
+     * Platziert ein Schiff der Länge g und mit Richtung r an Position x,y
+     *
+     * @param x Position X
+     * @param y Position Y
+     * @param g Schiffgröße, Wert zwischen 2 und 5
+     * @param r Richtung, Wert zwischen 0 und 3 (oben=0, rechts=1, unten=2, links=3)
+     * @return true, wenn platzieren möglich, sonst false
+     */
 	public boolean schiffPlatzieren(int x, int y, int g, int r)			//platziere Schiff der laenge g und richtung r an x,y
 	{
 		if(inFeld(x, y))//pos x,y in feld
@@ -334,6 +401,15 @@ public class Feld {
 		return false;
 	}
 	
+	
+	/**
+     * Ändere Wert des Feldes an Position x,y nach wert
+     *
+     * @param x Position X
+     * @param y Position Y
+     * @param wert Neuer Wert, der Gesetzt werden soll
+     * @return true, wenn ändern möglich, sonst false
+     */
 	public boolean feldAendern(int x, int y, int wert)					//Aendere feldwert an pos x y zu wert
 	{
 		if(inFeld(x, y))					//pruefe ob pos in feld
@@ -352,12 +428,31 @@ public class Feld {
 		return false; 													//fehler
 	}
 	
+	
+	/**
+     * Prüft, ob sich an Position x,y ein Schiff befindet
+     *
+     * @param x Position X
+     * @param y Position Y
+     * @return true, wenn Schiff an Position, sonst false
+     */
 	public boolean istSchiff(int x, int y)								//prueft ob an pos schiff ist
 	{
 		if(feld[x][y] == 1 || feld[x][y] == 2)
 			return true;
 		return false;
 	}
+	
+	
+	/**
+     * Schiesse an Position x,y
+     *
+     * @param x Position X
+     * @param y Position Y
+     * 
+     * @return bei Wasser 0, bei Treffer 1 und bei Schiff versenkt 2,
+     * im Fehlerfall -1
+     */
 	public int schiessen(int x, int y)
 	{
 		if(inFeld(x, y))	//koordinaten in feld
@@ -382,9 +477,19 @@ public class Feld {
 		return -1;
 	}
 	
+	
+	/**
+     * Prüft, ob das Schiff an Position x,y versenkt wurde
+     *
+     * @param x Position X
+     * @param y Position Y
+     * 
+     * @return gibt true zurück, wenn Schiff versenkt wurde,
+     * sonst false
+     */
 	private boolean schiffVersenkt(int x, int y)
 	{
-		for(int i=1; i<5; i++)//laufe nach rechts			//noch pruefen
+		for(int i=1; i<5; i++)//laufe nach rechts			
 		{
 			if(x+i >= getGroesse() || getFeldInhalt(x+i, y) == 0)	//wasser
 			{
@@ -422,6 +527,13 @@ public class Feld {
 		}
 		return true;
 	}
+	
+	/**
+     * Setzt die Feldwerte des Schiffes an Position x,y auf 3(versenkt)
+     *
+     * @param x Position X
+     * @param y Position Y
+     */
 	public void schiffVersenken(int x, int y)						//Setzt getroffene felder rekursiv auf versenkt
 	{
 		feldAendern(x, y, 3);
@@ -434,6 +546,14 @@ public class Feld {
 		if(x-1 >= 0 && getFeldInhalt(x-1, y) == 2)
 			schiffVersenken(x-1, y);
 	}
+	
+	/**
+     * Setzt die Feldwerte des Schiffes an Position x,y auf 3(versenkt)
+     * und setzt alle Felder drumherum auf 0(Wasser)
+     *
+     * @param x Position X
+     * @param y Position Y
+     */
 	public void schiffVersenkenv2(int x, int y)						//Setzt getroffene felder rekursiv auf versenkt
 	{
 		feldAendern(x, y, 3);										//setzt zusaetzlich die felder drumherum auf wasser
@@ -484,6 +604,15 @@ public class Feld {
 		}
 			
 	}
+	
+	/**
+     * Prüft, ob an die Position x,y bereits geschossen wurde.
+     *
+     * @param x Position X
+     * @param y Position Y
+     * 
+     * @return gibt true zurück, wenn Feld bereits beschossen wurde, sonst false
+     */
 	public boolean bereitsBeschossen(int x, int y)						//prueft ob position schon beschossen wurde
 	{
 		if(inFeld(x, y))
@@ -491,6 +620,13 @@ public class Feld {
 				return true;
 		return false;
 	}
+	
+	/**
+     * Get-Funktion, gibt die aktuellen Feldpunkte zurück
+     * 
+     * @return gibt Anzahl belegter Felder zurück
+     *
+     */
 	public int getFeldpunkte()
 	{
 		return belegteSchiffsfelder;
