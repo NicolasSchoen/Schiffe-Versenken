@@ -90,6 +90,7 @@ public class Guiplace extends JFrame {
 	 * 
 	 * @param g Feldgroesse
 	 * @param m Modus
+	 * @wbp.parser.constructor
 	 */
 	public Guiplace(int g, int m) {
 		getContentPane().addMouseListener(new MouseAdapter() {

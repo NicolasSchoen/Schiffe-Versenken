@@ -120,34 +120,43 @@ public class Guiserver extends JFrame {
 					
 					// Standardeingabestrom ebenfalls als BufferedReader verpacken.
 					usr = new BufferedReader(new InputStreamReader(System.in));
+					
+					
+					
+					if(laden) {
+						/*try {
+							out.write("Laden " + fn + " ");
+						    out.flush();
+						}catch (IOException e) {
+							e.printStackTrace();
+						}*/
+						
+						
+						
+						dispose();
+						new Guishot(game, s);
+					}
+					else {
+						try {
+							out.write(String.format("%s%n", "Feld " + feldgroesse));
+						    out.flush();
+						}catch (IOException e) {
+							e.printStackTrace();
+						}
+						
+						
+						dispose();
+						new Guiplace(feldgroesse, modus, s, true);
+					}
+					
+					
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				lblStatusMitspielerNicht.setText("Status: Spieler beigetreten");
 				
 				
-				if(laden) {
-					try {
-						out.write("Laden " + fn + " ");
-					    out.flush();
-					}catch (IOException e) {
-						e.printStackTrace();
-					}
-					
-					dispose();
-					new Guishot(game, s);
-				}
-				else {
-					try {
-						out.write(String.format("%s%n", "Feld " + feldgroesse));
-					    out.flush();
-					}catch (IOException e) {
-						e.printStackTrace();
-					}
-					
-					dispose();
-					new Guiplace(feldgroesse, modus, s, true);
-				}
+				
 				
 				
 					

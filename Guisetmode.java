@@ -61,7 +61,7 @@ public class Guisetmode extends JFrame {
 		this.setLocation(50, 50);
 		getContentPane().setLayout(null);
 		
-		JButton btnPvp = new JButton("PvP");
+		JButton btnPvp = new JButton("Spieler vs Multiplayer");
 		btnPvp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {					//pvp-button
 				int wert = Integer.parseInt(textField.getText());
@@ -83,7 +83,7 @@ public class Guisetmode extends JFrame {
 		btnPvp.setBounds(135, 138, 181, 45);
 		getContentPane().add(btnPvp);
 		
-		JButton btnPvc = new JButton("PvC");
+		JButton btnPvc = new JButton("Spieler vs Computer");
 		btnPvc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {					//pvc-button
 int wert = Integer.parseInt(textField.getText());
@@ -104,7 +104,7 @@ int wert = Integer.parseInt(textField.getText());
 		btnPvc.setBounds(135, 209, 181, 43);
 		getContentPane().add(btnPvc);
 		
-		JButton btnCvc = new JButton("CvC");
+		JButton btnCvc = new JButton("Computer vs Multiplayer");
 		btnCvc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {			//Button cvc
 				

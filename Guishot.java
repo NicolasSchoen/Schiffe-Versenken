@@ -96,6 +96,7 @@ public class Guishot extends JFrame {
 	 * Konstruktor, wird aufgerufen, wenn Spiel im Singleplayer gestartet
 	 * @param f uebergebenes Feld des Spielers
 	 * @param m Modus
+	 * @wbp.parser.constructor
 	 */
 	public Guishot(Feld f, int m) {
 		
@@ -339,8 +340,8 @@ public class Guishot extends JFrame {
 			// Ein- und Ausgabestrom des Sockets ermitteln
 			// und als BufferedReader bzw. Writer verpacken
 			// (damit man zeilen- bzw. zeichenweise statt byteweise arbeiten kann).
-			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-			out = new OutputStreamWriter(s.getOutputStream());
+			in = new BufferedReader(new InputStreamReader(this.s.getInputStream()));
+			out = new OutputStreamWriter(this.s.getOutputStream());
 			
 			// Standardeingabestrom ebenfalls als BufferedReader verpacken.
 			usr = new BufferedReader(new InputStreamReader(System.in));
@@ -349,6 +350,7 @@ public class Guishot extends JFrame {
 		}
 		
 		zeichneFeldNeu();
+		
 		
 		if(modus == 1) {
 			while(schiesse == false)
@@ -392,6 +394,7 @@ public class Guishot extends JFrame {
 			e.printStackTrace();
 		}
 		
+		zeichneFeldNeu();
 		
 		if(modus == 1) {
 			while(schiesse == false)
@@ -432,19 +435,19 @@ public class Guishot extends JFrame {
 		
 		while(true)
 		{
-				
+			zeichneFeldNeu();
 			
 			Random rand = new Random();
 			int posx = rand.nextInt(gegner.getGroesse());
 			int posy = rand.nextInt(gegner.getGroesse());
 			if(punkte < (int)(gegner.getGroesse() * gegner.getGroesse() * 0.3) && schiesse)
 			{
-				/*try {
+				try {
 					TimeUnit.SECONDS.sleep(1);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}*/
+				}
 				System.out.println("Ki tut was");
 				
 				
@@ -799,9 +802,21 @@ public class Guishot extends JFrame {
 		    		      }
 		    			
 		    			schiesse = false;
-		    			repaint();
+		    			
 		    			//c.getDefaultCursor();
 		    			btnSchiessen.setEnabled(false);
+		    			btnSchiessen.setBackground(Color.red);
+		    			zeichneFeldNeu();
+		    			
+		    			
+		    			try {										//wartete nach jedem schiessen 1 sekunde, zum nachvollziehen
+		    				TimeUnit.SECONDS.sleep(1);
+		    			} catch (InterruptedException e) {
+		    				// TODO Auto-generated catch block
+		    				e.printStackTrace();
+		    			}
+		    			
+		    			
 		    			while(schiesse == false)
 		    			{
 		    				
@@ -811,10 +826,21 @@ public class Guishot extends JFrame {
 			    			repaint();
 			    			if(!Ki.schiesse(spieler, gegner2))
 			    				schiesse = true;
-			    			else
+			    			else {
 			    				eigenePunkte--;
+			    				zeichneFeldNeu();
+				    			try {										//wartete nach jedem schiessen 1 sekunde, zum nachvollziehen
+				    				TimeUnit.SECONDS.sleep(1);
+				    			} catch (InterruptedException e) {
+				    				// TODO Auto-generated catch block
+				    				e.printStackTrace();
+				    			}
+			    			}
+			    				
+			    			
+			    			
 		    			}
-		    			zeichneFeldNeu();
+		    			
 		    			//do {
 		    				
 			    			

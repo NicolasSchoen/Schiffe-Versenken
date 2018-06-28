@@ -115,15 +115,17 @@ public class Guijoin extends JFrame {
 					try {
 						String line = in.readLine();
 					    System.out.println(line);
+					    String[] arr = line.split(" ");
 					    
-					    if (line.contains("Feld"))
+					    if (arr[0].equals("Feld"))
 					    {
-					    	String[] arr = line.split(" ");
+					    	//String[] arr = line.split(" ");
 					    	dispose();
 					    	new Guiplace(Integer.valueOf(arr[1]), 1, s, false);
 					    }
-					    if(line.contains("Laden")) {
-					    	String[] arr = line.split(" ");
+					    
+					    if(arr[0].equals("Laden")) {
+					    	//String[] arr = line.split(" ");
 					    	System.out.println("ladenxxx");
 					    	JOptionPane.showMessageDialog(null, "Laden von: " + arr[1]);
 					    	
@@ -233,16 +235,17 @@ public class Guijoin extends JFrame {
 					try {
 						String line = in.readLine();
 					    System.out.println(line);
+					    String[] arr = line.split(" ");
 					    
-					    if (line.contains("Feld"))
+					    if (arr[0].equals("Feld"))
 					    {
-					    	String[] arr = line.split(" ");
+					    	//String[] arr = line.split(" ");
 					    	dispose();
 					    	new Guiplace(Integer.valueOf(arr[1]), 3, s, false);
 					    }
 					    
-					    if(line.contains("Laden")) {
-					    	String[] arr = line.split(" ");
+					    if(arr[0].equals("Laden")) {
+					    	//String[] arr = line.split(" ");
 					    	System.out.println("ladenxxx");
 					    	JOptionPane.showMessageDialog(null, "Laden von: " + arr[1]);
 					    	
