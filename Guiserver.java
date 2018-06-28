@@ -124,12 +124,13 @@ public class Guiserver extends JFrame {
 					
 					
 					if(laden) {
-						/*try {
-							out.write("Laden " + fn + " ");
+						System.out.println("LADENMULT!!!");
+						try {
+							out.write("Laden " + fn + "\n");
 						    out.flush();
 						}catch (IOException e) {
 							e.printStackTrace();
-						}*/
+						}
 						
 						
 						

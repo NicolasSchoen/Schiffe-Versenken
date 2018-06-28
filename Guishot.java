@@ -340,8 +340,8 @@ public class Guishot extends JFrame {
 			// Ein- und Ausgabestrom des Sockets ermitteln
 			// und als BufferedReader bzw. Writer verpacken
 			// (damit man zeilen- bzw. zeichenweise statt byteweise arbeiten kann).
-			in = new BufferedReader(new InputStreamReader(this.s.getInputStream()));
-			out = new OutputStreamWriter(this.s.getOutputStream());
+			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			out = new OutputStreamWriter(s.getOutputStream());
 			
 			// Standardeingabestrom ebenfalls als BufferedReader verpacken.
 			usr = new BufferedReader(new InputStreamReader(System.in));
@@ -393,7 +393,12 @@ public class Guishot extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		try {										//wartete nach jedem schiessen 1 sekunde, zum nachvollziehen
+			TimeUnit.SECONDS.sleep(1);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		zeichneFeldNeu();
 		
 		if(modus == 1) {
